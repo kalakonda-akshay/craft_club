@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CRAFT — Council for Real-world Applications & Future Tech</title>
+<meta name="description" content="CRAFT is the student-led Tech Radar club of the CSE Department at Amrita Vishwa Vidyapeetham, Nagercoil Campus — hands-on Build-Along workshops in trending languages, AI agents, and production deployment.">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="CRAFT — Council for Real-world Applications & Future Tech">
+<meta property="og:description" content="Student-led Build-Along workshops at Amrita Vishwa Vidyapeetham, Nagercoil Campus — real projects, deployed live, in 90 minutes.">
+<meta property="og:site_name" content="CRAFT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CRAFT — Council for Real-world Applications & Future Tech">
+<meta name="twitter:description" content="Student-led Build-Along workshops at Amrita Vishwa Vidyapeetham, Nagercoil Campus.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "AI Agent Build-Along: Automate Your Notes",
+  "startDate": "2026-08-14T16:00:00+05:30",
+  "endDate": "2026-08-14T17:30:00+05:30",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "location": {
+    "@type": "Place",
+    "name": "CSE Seminar Hall, Block C",
+    "address": "Amrita Vishwa Vidyapeetham, Nagercoil Campus, Tamil Nadu"
+  },
+  "organizer": {
+    "@type": "Organization",
+    "name": "CRAFT — Council for Real-world Applications & Future Tech"
+  },
+  "description": "A hands-on Build-Along workshop where members build and deploy an AI-powered note aggregator using the Gemini API."
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B1A2C'/%3E%3Cpath d='M30 32 L18 50 L30 68' stroke='%23C99A2E' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M70 32 L82 50 L70 68' stroke='%23FFFFFF' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='46' y='58' width='9' height='9' rx='2' fill='%23C99A2E'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============ NAV ============ -->
+<div class="scroll-progress" id="scrollProgress"></div>
+<header class="site-nav" id="top">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">&gt;_</span> CRAFT
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#agenda">Agenda</a>
+      <a href="#leadership">Team</a>
+      <a href="#events">Events</a>
+      <a href="#join">Join</a>
+    </nav>
+    <a class="nav-login-link" href="login.html">Login</a>
+    <a class="btn btn-ghost nav-cta" href="#join">Register →</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle color / mono theme" title="Toggle color / mono theme">◐</button>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="nav-links nav-links--mobile" id="mobileMenu" aria-label="Mobile">
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">&times;</button>
+    <a href="#about">About</a>
+    <a href="#agenda">Agenda</a>
+    <a href="#leadership">Team</a>
+    <a href="#events">Events</a>
+    <a href="#join">Join</a>
+    <a href="login.html" style="color:var(--gold-300);">Login</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="hero-noise" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <p class="eyebrow"><span class="dot"></span> Dept. of CSE · Amrita Vishwa Vidyapeetham, Nagercoil Campus</p>
+      <h1 class="hero-title">
+        Council for Real-world<br>
+        Applications &amp; Future Tech
+      </h1>
+      <p class="hero-sub">
+        The syllabus teaches C and Java. The market hires for TypeScript, AI agents, and shipped products.
+        CRAFT is the student-run Tech Radar that closes that gap — one live, deployed build at a time.
+      </p>
+      <div class="hero-actions">
+        <a href="#join" class="btn btn-primary">Claim one of 100 seats</a>
+        <a href="#agenda" class="btn btn-outline">See the club agenda</a>
+      </div>
+      <p class="hero-note">Ball breaks the pixels above — hover to redirect it. <span class="reduced-only">(Animation paused: reduced motion is on.)</span></p>
+    </div>
+  </section>
+
+  <!-- ============ TICKER ============ -->
+  <section class="ticker" aria-label="Technologies covered">
+    <div class="ticker-track">
+      <span>TypeScript</span><span>·</span>
+      <span>Gemini API</span><span>·</span>
+      <span>AI Agents</span><span>·</span>
+      <span>Tailwind CSS</span><span>·</span>
+      <span>Supabase</span><span>·</span>
+      <span>Vercel</span><span>·</span>
+      <span>JWT Auth</span><span>·</span>
+      <span>TypeScript</span><span>·</span>
+      <span>Gemini API</span><span>·</span>
+      <span>AI Agents</span><span>·</span>
+      <span>Tailwind CSS</span><span>·</span>
+      <span>Supabase</span><span>·</span>
+      <span>Vercel</span><span>·</span>
+      <span>JWT Auth</span><span>·</span>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ ABOUT THE CAMPUS ============ -->
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="about-block reveal">
+        <h2>Amrita Vishwa Vidyapeetham</h2>
+        <p class="about-sub">Nagercoil Campus, Tamil Nadu</p>
+        <div class="about-body">
+          <p>
+            Amrita Vishwa Vidyapeetham is a multi-campus, multidisciplinary research university accredited with
+            the highest possible grade 'A++' by NAAC. Consistently ranked among the top universities in India,
+            Amrita is known for its commitment to excellence in education, research, and community service.
+          </p>
+          <p>
+            The Nagercoil Campus, nestled in the southernmost tip of India, offers a vibrant academic environment
+            with state-of-the-art facilities. The campus provides undergraduate and postgraduate programs in
+            Engineering, Sciences, and Management, fostering holistic development of students.
+          </p>
+          <p>
+            CRAFT operates within the Department of Computer Science and Engineering, under the guidance of the
+            Faculty Advisory Board, making it a direct extension of the campus's commitment to hands-on,
+            industry-relevant learning alongside the core academic curriculum.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 01 / CLUB AGENDA ============ -->
+  <section class="section" id="agenda">
+    <div class="wrap">
+      <p class="kicker">01 / Club Agenda</p>
+      <h2 class="section-title">Learn it. Build it. Ship it.</h2>
+      <p class="section-lede">
+        CRAFT helps students move from classroom concepts to real-world outcomes through practical learning,
+        collaborative building, and visible work.
+      </p>
+
+      <div class="process-flow">
+        <div class="process-line" aria-hidden="true"><div class="process-line-fill" id="processLineFill"><span class="process-line-tip"></span></div></div>
+
+        <div class="process-stage reveal">
+          <div class="process-num">01</div>
+          <div class="process-content">
+            <span class="process-tag">INPUT</span>
+            <h3>Discover</h3>
+            <p>Explore new technologies, tools, opportunities, and ideas beyond the classroom.</p>
+          </div>
+        </div>
+
+        <div class="process-stage process-stage--dark reveal">
+          <div class="process-num">02</div>
+          <div class="process-content">
+            <span class="process-tag">FOUNDATION</span>
+            <h3>Learn</h3>
+            <p>Understand the foundations through focused workshops, build-alongs, resources, and peer guidance.</p>
+          </div>
+        </div>
+
+        <div class="process-stage reveal">
+          <div class="process-num">03</div>
+          <div class="process-content">
+            <span class="process-tag">OUTPUT</span>
+            <h3>Build</h3>
+            <p>Turn learning into practical projects, prototypes, portfolios, and real problem-solving work.</p>
+          </div>
+        </div>
+
+        <div class="process-stage process-stage--dark reveal">
+          <div class="process-num">04</div>
+          <div class="process-content">
+            <span class="process-tag">NEXT STEP</span>
+            <h3>Deploy</h3>
+            <p>Test, document, deploy, and share work through GitHub, live demos, showcases, and events.</p>
+          </div>
+        </div>
+
+        <div class="process-stage reveal">
+          <div class="process-num">05</div>
+          <div class="process-content">
+            <span class="process-tag">OUTCOME</span>
+            <h3>Grow</h3>
+            <p>Build confidence, leadership, collaboration, technical awareness, and career readiness.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ 02 / THE METHOD (15-60-15) ============ -->
+  <section class="section section--dark" id="framework">
+    <div class="wrap">
+      <p class="kicker kicker--light">02 / The Method</p>
+      <h2 class="section-title section-title--light">One session. Ninety minutes.<br>One visible outcome.</h2>
+      <p class="section-lede section-lede--light">
+        Every CRAFT session is designed to move from understanding to execution. Members leave with something
+        tested, documented, deployed, or ready to share.
+      </p>
+
+      <div class="method-track">
+        <div class="method-step">
+          <div class="method-num">15</div>
+          <span class="method-unit">min</span>
+          <h3>Brief &amp; Blueprint</h3>
+          <p>A quick walkthrough of what's being built and why it matters, before anyone touches code.</p>
+        </div>
+        <div class="method-arrow">→</div>
+        <div class="method-step method-step--active">
+          <div class="method-num">60</div>
+          <span class="method-unit">min</span>
+          <h3>Build Together</h3>
+          <p>Members build hands-on with peer and coordinator support, moving from concept to working output.</p>
+        </div>
+        <div class="method-arrow">→</div>
+        <div class="method-step">
+          <div class="method-num">15</div>
+          <span class="method-unit">min</span>
+          <h3>Test, Deploy &amp; Share</h3>
+          <p>Every build gets tested, documented, and shared — deployed live or pushed to GitHub.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ MESSAGES FROM LEADERSHIP (voices) ============ -->
+  <section class="section" id="leadership-voices">
+    <div class="wrap">
+      <p class="kicker">— Voices —</p>
+      <h2 class="section-title">Messages from Leadership</h2>
+
+      <div class="grid-2 grid-2--centered" style="margin-top:40px;">
+        <article class="leader-card reveal">
+          <div class="photo-ring photo-ring--sm"><div class="photo-ring-inner">👤</div></div>
+          <p class="leader-quote">CRAFT gives our students the space to explore technologies beyond the classroom. When students build real projects and deploy them, they don't just learn — they gain the confidence and portfolio that industry actually looks for.</p>
+          <p class="leader-name">Thangam V</p>
+          <p class="leader-role">Faculty Coordinator, CRAFT</p>
+        </article>
+        <article class="leader-card reveal">
+          <div class="photo-ring photo-ring--sm"><div class="photo-ring-inner">👤</div></div>
+          <p class="leader-quote">Every student who joins CRAFT should leave with something they built, not just something they learned. That shift from theory to practical creation is what makes this club valuable.</p>
+          <p class="leader-name">Sasikala</p>
+          <p class="leader-role">Faculty Co-Coordinator, CRAFT</p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ 04 / FACULTY COORDINATORS ============ -->
+  <section class="section section--dark" id="faculty">
+    <div class="wrap">
+      <p class="kicker kicker--light">03 / Faculty Coordinators</p>
+      <h2 class="section-title section-title--light">Guidance behind every build.</h2>
+      <p class="section-lede section-lede--light">
+        CRAFT is supported by faculty guidance that helps keep the club structured, practical, responsible,
+        and aligned with campus values.
+      </p>
+
+      <div class="grid-2" style="margin-top:48px;">
+        <article class="faculty-card reveal">
+          <div class="photo-ring photo-ring--lg"><div class="photo-ring-inner">👤</div></div>
+          <h3>Thangam V</h3>
+          <span class="coord-role">Faculty Coordinator</span>
+          <span class="coord-dept" style="color:var(--mist-200);">Department of Computer Science and Engineering</span>
+          <p class="coord-desc" style="color:var(--mist-200);">"Advisory message placeholder — a short note on guiding CRAFT's direction and priorities."</p>
+          <span class="badge-pill badge-pill--dark">Faculty Advisory Board</span>
+          <p class="faculty-focus">Guiding focus: Student development, technical learning, academic alignment</p>
+        </article>
+        <article class="faculty-card reveal">
+          <div class="photo-ring photo-ring--lg"><div class="photo-ring-inner">👤</div></div>
+          <h3>Sasikala</h3>
+          <span class="coord-role">Faculty Co-Coordinator</span>
+          <span class="coord-dept" style="color:var(--mist-200);">Department of Computer Science and Engineering</span>
+          <p class="coord-desc" style="color:var(--mist-200);">"Advisory message placeholder — a short note on supporting coordinator growth."</p>
+          <span class="badge-pill badge-pill--dark">Faculty Advisory Board</span>
+          <p class="faculty-focus">Guiding focus: Coordinator development, session quality, academic alignment</p>
+        </article>
+      </div>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ 03 / LEADERSHIP ============ -->
+  <section class="section" id="leadership">
+    <div class="wrap">
+      <p class="kicker">04 / Leadership</p>
+      <h2 class="section-title">The people building CRAFT.</h2>
+      <p class="section-lede">
+        CRAFT is led by students who turn ideas into workshops, projects, opportunities, and a stronger
+        technical community.
+      </p>
+      <p class="mock-tag" style="margin-top:20px;">Mock data — names and details editable in js/data.js</p>
+
+      <div class="grid-6" id="leadershipGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ CLUB MEMBERS ============ -->
+  <section class="section" id="members">
+    <div class="wrap">
+      <p class="kicker">— Club Members —</p>
+      <h2 class="section-title">Who's building with us.</h2>
+      <p class="section-lede">Active CRAFT members, department by department. Core membership fills as registrations are reviewed.</p>
+      <div class="grid-4" id="membersGrid" style="margin-top:40px;"></div>
+      <p class="mock-tag" id="membersEmptyNote" style="margin-top:24px; display:none;">No active members yet — accepted registrations will appear here.</p>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+
+  <!-- ============ 05 / UPCOMING EVENTS ============ -->
+  <section class="section section--dark" id="events">
+    <div class="wrap">
+      <p class="kicker kicker--light">05 / Upcoming Events</p>
+      <h2 class="section-title section-title--light">What we are building next.</h2>
+      <p class="mock-tag" style="margin-top:20px; background:rgba(255,255,255,0.08); color:var(--gold-300);">Mock data — for layout preview only</p>
+
+      <div class="event-legend reveal">
+        <span><span class="legend-dot legend-dot--open"></span> Open</span>
+        <span><span class="legend-dot legend-dot--filling"></span> Filling Fast</span>
+        <span><span class="legend-dot legend-dot--waitlist"></span> Waitlist</span>
+      </div>
+
+      <div class="events-layout">
+        <article class="event-featured reveal" id="eventFeatured"></article>
+        <div class="event-small" id="eventSideList"></div>
+      </div>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+
+  <!-- ============ 06 / PAST EVENTS & IMPACT ============ -->
+  <section class="section" id="impact">
+    <div class="wrap">
+      <p class="kicker">06 / Past Events &amp; Impact</p>
+      <h2 class="section-title">Work that left the room.</h2>
+
+      <div class="gallery-strip">
+        <div class="gallery-placeholder reveal">Workshop photo<br>placeholder</div>
+        <div class="gallery-placeholder reveal">Session photo<br>placeholder</div>
+        <div class="gallery-placeholder reveal">Demo Day photo<br>placeholder</div>
+        <div class="gallery-placeholder reveal">Team photo<br>placeholder</div>
+      </div>
+
+      <div class="impact-grid">
+        <div class="reveal"><span class="impact-num">120</span><span class="impact-label">Students attended</span></div>
+        <div class="reveal"><span class="impact-num">34</span><span class="impact-label">Projects deployed</span></div>
+        <div class="reveal"><span class="impact-num">9</span><span class="impact-label">Workshops completed</span></div>
+        <div class="reveal"><span class="impact-num">28</span><span class="impact-label">Certificates issued</span></div>
+      </div>
+
+      <ul class="outcome-list">
+        <li>12 students deployed their first web app.</li>
+        <li>18 students created GitHub-ready project repositories.</li>
+      </ul>
+      <p class="mock-tag" style="margin-top:20px;">Mock numbers — replace with real figures each semester</p>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ 07 / BUILD OF THE MONTH ============ -->
+  <section class="section section--dark" id="build-of-month">
+    <div class="wrap">
+      <p class="kicker kicker--light">07 / Build of the Month</p>
+      <h2 class="section-title section-title--light">One project. Fully shipped.</h2>
+
+      <div class="build-feature reveal" id="buildOfMonthSlot" style="background:var(--navy-900); border-color:var(--line-dark);"></div>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ 08 / PROJECT SHOWCASE ============ -->
+  <section class="section" id="projects">
+    <div class="wrap">
+      <p class="kicker">08 / Project Showcase</p>
+      <h2 class="section-title">Built here. Ready for the world.</h2>
+      <p class="mock-tag" style="margin-top:20px;">Mock projects — for layout preview only</p>
+
+      <div class="filter-row filter-row--light" id="projectsFilterRow"></div>
+      <div class="grid-4" style="margin-top:32px;" id="projectsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ 09 / WORKSHOP RESOURCES ============ -->
+  <section class="section" id="resources">
+    <div class="wrap">
+      <p class="kicker">09 / Workshop Resources</p>
+      <h2 class="section-title">Keep building after the session.</h2>
+
+      <div class="grid-4" style="margin-top:40px;">
+        <div class="resource-card reveal"><div class="resource-icon">▤</div><h3>Session Slides</h3><p>Deck used in the live walkthrough, kept for revision.</p><span class="resource-link">View →</span></div>
+        <div class="resource-card reveal"><div class="resource-icon">⌥</div><h3>Starter Repositories</h3><p>The exact repo template each Build-Along starts from.</p><span class="resource-link">View →</span></div>
+        <div class="resource-card reveal"><div class="resource-icon">☑</div><h3>Notes &amp; Checklists</h3><p>Step-by-step notes for anyone who joined late or missed a step.</p><span class="resource-link">View →</span></div>
+        <div class="resource-card reveal"><div class="resource-icon">▶</div><h3>Recording Links</h3><p>Session recordings for members who couldn't attend live.</p><span class="resource-link">View →</span></div>
+        <div class="resource-card reveal"><div class="resource-icon">✦</div><h3>Useful Tools</h3><p>Editors, extensions, and utilities the team actually uses.</p><span class="resource-link">View →</span></div>
+        <div class="resource-card reveal"><div class="resource-icon">☁</div><h3>Deployment Guides</h3><p>Short guides for shipping to Vercel, Supabase, and friends.</p><span class="resource-link">View →</span></div>
+      </div>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ 10 / TECH RADAR ============ -->
+  <section class="section section--dark" id="tech-radar">
+    <div class="wrap">
+      <p class="kicker kicker--light">10 / Tech Radar</p>
+      <h2 class="section-title section-title--light">What is worth watching.</h2>
+      <p class="section-lede section-lede--light">
+        A curated signal board for technologies, tools, opportunities, and learning paths worth your attention.
+      </p>
+
+      <div class="radar-feature reveal" id="radarFeature"></div>
+
+      <div class="filter-row" id="radarFilterRow"></div>
+      <div class="grid-3" style="margin-top:24px;" id="radarItems"></div>
+
+      <a href="#" class="view-all-cta view-all-cta--light reveal">Explore Tech Radar →</a>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+  <!-- ============ 11 / ANNOUNCEMENTS ============ -->
+  <section class="section" id="announcements">
+    <div class="wrap">
+      <p class="kicker">11 / Announcements</p>
+      <h2 class="section-title">From the club desk.</h2>
+      <p class="section-lede">Important updates, registrations, deadlines, recruitment notices, and campus opportunities.</p>
+
+      <div class="announce-feature reveal" id="announceFeature"></div>
+
+      <div class="announce-list" id="announceList"></div>
+
+      <a href="#" class="view-all-cta reveal">View all announcements →</a>
+    </div>
+  </section>
+  <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+
+
+
+  <!-- ============ 12 / GALLERY ============ -->
+  <section class="section" id="gallery">
+    <div class="wrap">
+      <p class="kicker">12 / Gallery</p>
+      <h2 class="section-title">Proof of work.</h2>
+
+      <div class="masonry" id="galleryGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ 13 / MEMBER NOTES ============ -->
+  <section class="section" id="notes">
+    <div class="wrap">
+      <p class="kicker">13 / Member Notes</p>
+      <h2 class="section-title">What members take with them.</h2>
+
+      <div class="carousel">
+        <div class="carousel-track">
+          <div class="carousel-slides" id="testimonialSlides"></div>
+        </div>
+        <div class="carousel-controls">
+          <button class="carousel-arrow" data-carousel-prev aria-label="Previous testimonial">←</button>
+          <div class="carousel-dots" id="testimonialDots"></div>
+          <button class="carousel-arrow" data-carousel-next aria-label="Next testimonial">→</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 14 / FAQ ============ -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <p class="kicker">14 / FAQ</p>
+      <h2 class="section-title">Before you join.</h2>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">Can any student join CRAFT? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Yes. CRAFT is open to students from CSE A, CSE B, CSE C, AI &amp; DS, and ECE at Amrita Vishwa Vidyapeetham, Nagercoil Campus. Students do not need prior experience in AI, web development, or advanced programming to apply as regular members. Curiosity, consistency, and willingness to build matter most.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Is prior coding experience required? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>No. Sessions are designed so first-time builders and experienced coders can both contribute.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">How are members selected? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Registrations are reviewed by the CRAFT team on a first-come basis until the 100-seat cap is reached.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">How do workshops work? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Every session follows the 15-60-15 method: a short brief, a hands-on build, then a test-and-share close.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Will certificates be provided? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Participation certificates are issued for completed workshop series — details are shared each semester.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Can I join as a student coordinator? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Yes — coordinator applicants should already have at least one completed project to show.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">What happens after 100 core member seats are filled? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>New registrations join the Waiting List and are promoted automatically as seats open up.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">Can I attend events without becoming a core member? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Yes — most workshops and events are open to interested students even before a core seat opens up. Core membership just guarantees a guaranteed seat and closer coordinator support.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="stats">
+    <div class="wrap stats-grid">
+      <div class="stat"><span class="stat-num" id="statActiveCap">50</span><span class="stat-label">Active member cap</span></div>
+      <div class="stat"><span class="stat-num" id="statSessionMinutes">90</span><span class="stat-label">Minutes per session</span></div>
+      <div class="stat"><span class="stat-num" id="statDeployRatio">1:1</span><span class="stat-label">Live-deploy ratio</span></div>
+      <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Ongoing Build-Alongs</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 15 / JOIN ============ -->
+  <section class="section" id="join">
+    <div class="wrap join-grid">
+      <div class="join-copy">
+        <p class="kicker">15 / Join</p>
+        <h2 class="section-title">A hundred seats. First come, first built.</h2>
+        <p class="section-lede">
+          Registrations are reviewed by the CRAFT team. Once 50 core seats fill, every new entry joins the
+          Waiting List and is promoted the moment a seat opens.
+        </p>
+        <p class="mock-tag" id="joinSeatsRemaining" style="margin-top:14px;"></p>
+        <ul class="join-list">
+          <li>Core membership is limited to 100 students</li>
+          <li>Registrations are reviewed by the CRAFT leadership team</li>
+          <li>Students can join a waiting list after seats are full</li>
+          <li>No prior AI or web experience is required for members</li>
+          <li>Eligible applicants may be contacted for a short interaction or orientation</li>
+          <li>Coordinator applicants should already have at least one completed project</li>
+          <li>Coordinator recruitment WhatsApp: <strong>9390093424</strong></li>
+        </ul>
+      </div>
+
+      <form class="join-form" id="joinForm" novalidate>
+        <div class="form-row">
+          <label for="fname">Full name</label>
+          <input type="text" id="fname" name="fname" required autocomplete="name">
+        </div>
+        <div class="form-row">
+          <label for="froll">Roll number</label>
+          <input type="text" id="froll" name="froll" placeholder="NC.SC.U4CSE25XXX" required>
+        </div>
+        <div class="form-row">
+          <label for="femail">College email</label>
+          <input type="email" id="femail" name="femail" required autocomplete="email">
+        </div>
+        <div class="form-row">
+          <label for="fphone">Phone number</label>
+          <input type="tel" id="fphone" name="fphone" required autocomplete="tel">
+        </div>
+        <div class="form-row">
+          <label for="fdob">Date of birth</label>
+          <input type="date" id="fdob" name="fdob" required autocomplete="bday">
+          <span class="form-row-hint">This becomes your login password (as DD-MM-YYYY) — keep it handy.</span>
+        </div>
+        <div class="form-row">
+          <label for="fyear">Year of study</label>
+          <select id="fyear" name="fyear" required>
+            <option value="" disabled selected>Select year</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="fdept">Department</label>
+          <select id="fdept" name="fdept" required>
+            <option value="" disabled selected>Select department</option>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="MECH">MECH</option>
+            <option value="CIVIL">CIVIL</option>
+            <option value="EEE">EEE</option>
+            <option value="AIE">AIE</option>
+            <option value="CYS">CYS</option>
+            <option value="EAC">EAC</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="fsection">Section</label>
+          <input type="text" id="fsection" name="fsection" placeholder="e.g. A" required>
+        </div>
+        <div class="form-row">
+          <label for="finterest">Area of interest</label>
+          <select id="finterest" name="finterest" required>
+            <option value="" disabled selected>Select area of interest</option>
+            <option>AI &amp; AI Agents</option>
+            <option>Web Development</option>
+            <option>UI/UX</option>
+            <option>Automation</option>
+            <option>Cloud &amp; Deployment</option>
+            <option>Hackathons</option>
+            <option>Unsure, exploring</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="fprofile">GitHub or LinkedIn profile <span style="font-weight:400; color:var(--ink-700);">(optional)</span></label>
+          <input type="url" id="fprofile" name="fprofile" placeholder="https://github.com/yourhandle">
+        </div>
+        <div class="form-row">
+          <label for="fphoto">Photo <span style="font-weight:400; color:var(--ink-700);">(optional — shown on your ID card)</span></label>
+          <div class="photo-upload-row">
+            <div class="photo-upload-preview" id="fphotoPreview">👤</div>
+            <input type="file" id="fphoto" name="fphoto" accept="image/*">
+          </div>
+        </div>
+        <div class="form-row form-row--checkbox">
+          <label class="checkbox-label">
+            <input type="checkbox" id="fagree" name="fagree" required>
+            <span>I agree to attend CRAFT sessions responsibly and follow club guidelines.</span>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Submit registration</button>
+        <p class="form-helper">
+          Your registration will be reviewed by the CRAFT leadership team. Core membership is limited to 100
+          students. Eligible applicants may be contacted for a short interaction or orientation.
+        </p>
+        <p class="form-helper form-helper--note">
+          For student coordinator roles, applicants should already have at least one completed technical
+          project. Contact <strong>9390093424</strong> on WhatsApp for coordinator recruitment.
+        </p>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+      <div id="idCardContainer" class="id-card-container"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="brand brand--footer" href="#top"><span class="brand-mark">&gt;_</span> CRAFT</a>
+      <p>Council for Real-world Applications &amp; Future Tech<br>Dept. of Computer Science &amp; Engineering<br>Amrita Vishwa Vidyapeetham, Nagercoil Campus</p>
+    </div>
+    <div>
+      <h4>Faculty Advisory Board</h4>
+      <p>Mrs. Thangam V — Faculty Coordinator<br>Dr./Mrs. Sasikala — Faculty Co-Coordinator</p>
+    </div>
+    <div>
+      <h4>Founder &amp; Club Lead</h4>
+      <p>Kalakonda Akshay<br>NC.SC.U4CSE25049</p>
+    </div>
+    <div>
+      <h4>Elsewhere</h4>
+      <p>
+        <a href="#">Instagram</a><br>
+        <a href="#">LinkedIn</a><br>
+        <a href="https://wa.me/919390093424" target="_blank" rel="noopener">WhatsApp: 9390093424</a><br>
+        <a href="mailto:craft.cse@example.edu">craft.cse@example.edu</a>
+      </p>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© <span id="year"></span> CRAFT · Amrita Vishwa Vidyapeetham, Nagercoil Campus</span>
+    <span>Governed by the CRAFT Club Constitution</span>
+    <a href="admin.html" class="footer-admin-link">Coordinator Admin →</a>
+  </div>
+</footer>
+
+<!-- QR Modal -->
+<div id="publicQrModal" class="idcard-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+  <div style="background: var(--surface); padding: 30px; border-radius: 16px; text-align: center; border: 1px solid var(--accent); max-width: 400px; width: 90%;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="margin: 0; color: var(--text-heading); font-size: 20px;">Your Event Pass</h2>
+      <button onclick="document.getElementById('publicQrModal').style.display='none'" style="background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer;">&times;</button>
+    </div>
+    <div style="background: white; padding: 20px; border-radius: 8px; display: inline-block;">
+      <img id="publicQrImage" src="" alt="QR Code" style="width: 200px; height: 200px;">
+    </div>
+    <p style="color: var(--text-muted); margin-top: 15px; font-size: 14px;">Scan this at club events for instant check-in.</p>
+  </div>
+</div>
+
+<script src="js/convex-bundle.js"></script>
+<script src="js/data.js"></script>
+<script src="js/registrations.js"></script>
+<script src="js/content-store.js"></script>
+<script src="js/render.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

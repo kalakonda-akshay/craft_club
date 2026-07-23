@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Login — CRAFT</title>
+<meta name="description" content="Log in to your CRAFT member account.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/login.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B1A2C'/%3E%3Cpath d='M30 32 L18 50 L30 68' stroke='%23C99A2E' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M70 32 L82 50 L70 68' stroke='%23FFFFFF' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='46' y='58' width='9' height='9' rx='2' fill='%23C99A2E'/%3E%3C/svg%3E">
+</head>
+<body class="login-body">
+
+<a class="skip-link" href="#loginMain">Skip to content</a>
+
+<!-- ============ Volumetric spotlight room (CSS recreation) ============ -->
+<div class="room" id="room" aria-hidden="true">
+  <!-- Back / ceiling / left / right / floor wall panels -->
+  <div class="room-wall room-wall--back"></div>
+  <div class="room-wall room-wall--ceiling"></div>
+  <div class="room-wall room-wall--left"></div>
+  <div class="room-wall room-wall--right"></div>
+  <div class="room-wall room-wall--floor"></div>
+
+  <!-- Spotlight cones + glow pools, fade in via JS flicker sequence -->
+  <div class="room-lights" id="roomLights">
+    <div class="spot-glow" style="--spot-x:30%;"></div>
+    <div class="spot-glow" style="--spot-x:50%;"></div>
+    <div class="spot-glow" style="--spot-x:70%;"></div>
+    <div class="spot-cone" style="--spot-x:30%;"></div>
+    <div class="spot-cone" style="--spot-x:50%;"></div>
+    <div class="spot-cone" style="--spot-x:70%;"></div>
+  </div>
+
+  <!-- Physical fixtures hanging from the ceiling -->
+  <div class="fixtures">
+    <div class="fixture" style="--spot-x:30%;">
+      <div class="fixture-mount"><span class="mount-screw"></span><span class="mount-screw"></span></div>
+      <div class="fixture-ball"></div>
+      <div class="fixture-barrel">
+        <span class="barrel-ridge"></span><span class="barrel-ridge"></span><span class="barrel-ridge"></span>
+        <div class="fixture-lens"><span class="lens-bulb" id="bulb1"></span></div>
+      </div>
+    </div>
+    <div class="fixture" style="--spot-x:50%;">
+      <div class="fixture-mount"><span class="mount-screw"></span><span class="mount-screw"></span></div>
+      <div class="fixture-ball"></div>
+      <div class="fixture-barrel">
+        <span class="barrel-ridge"></span><span class="barrel-ridge"></span><span class="barrel-ridge"></span>
+        <div class="fixture-lens"><span class="lens-bulb" id="bulb2"></span></div>
+      </div>
+    </div>
+    <div class="fixture" style="--spot-x:70%;">
+      <div class="fixture-mount"><span class="mount-screw"></span><span class="mount-screw"></span></div>
+      <div class="fixture-ball"></div>
+      <div class="fixture-barrel">
+        <span class="barrel-ridge"></span><span class="barrel-ridge"></span><span class="barrel-ridge"></span>
+        <div class="fixture-lens"><span class="lens-bulb" id="bulb3"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="room-vignette"></div>
+  <div class="room-grain"></div>
+</div>
+
+<!-- ============ Nav ============ -->
+<header class="login-nav">
+  <a class="brand" href="index.html"><span class="brand-mark">&gt;_</span> CRAFT</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle color / mono theme" title="Toggle color / mono theme">◐</button>
+</header>
+
+<!-- ============ Login card ============ -->
+<main id="loginMain" class="login-main">
+  <div class="login-card-wrap">
+    <p class="login-eyebrow reveal-in" id="loginEyebrow">Member Access</p>
+    <h1 class="login-title reveal-in" id="loginTitle">Welcome back.</h1>
+    <p class="login-sub reveal-in" id="loginSub">Log in to track your registrations, RSVPs, and coordinator tools.</p>
+
+    <form class="login-card reveal-in" id="loginForm" novalidate>
+      <div class="form-row">
+        <label for="lemail">College email</label>
+        <input type="email" id="lemail" name="lemail" required autocomplete="email" placeholder="you@college.edu">
+      </div>
+      <div class="form-row">
+        <label for="lpassword">Password</label>
+        <input type="password" id="lpassword" name="lpassword" required autocomplete="off" placeholder="DD-MM-YYYY">
+        <span class="form-row-hint">Use your date of birth as DD-MM-YYYY (the same one you registered with).</span>
+      </div>
+      <div class="login-row-between">
+        <label class="checkbox-label" style="color:var(--mist-200);">
+          <input type="checkbox" id="lremember" name="lremember">
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="login-forgot" id="forgotPasswordLink">Forgot password?</a>
+      </div>
+      <div class="forgot-password-panel" id="forgotPasswordPanel" hidden>
+        <p>Your password is your <strong>date of birth</strong>, typed as <strong>DD-MM-YYYY</strong> — the same one you entered when you registered.</p>
+        <p>Still stuck? Message a coordinator on <a href="https://wa.me/919390093424" target="_blank" rel="noopener">WhatsApp</a> to confirm the email or DOB on file for your account.</p>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Log In</button>
+      <p class="form-status" id="loginStatus" role="status" aria-live="polite"></p>
+
+      <div class="login-divider"><span>New to CRAFT?</span></div>
+      <a href="index.html#join" class="btn btn-outline btn-block login-register-link">Register as a member</a>
+    </form>
+
+    <!-- Shown once a registration is found for the entered email -->
+    <div id="memberCardView" class="reveal-in" hidden>
+      <div id="memberAlertSlot"></div>
+      <div id="memberCardSlot"></div>
+
+      <div class="member-dash-grid">
+        <div class="member-dash-tile">
+          <span class="member-dash-num" id="memberSessionsNum">0 / 0</span>
+          <span class="member-dash-label">Sessions attended</span>
+        </div>
+        <div class="member-dash-tile">
+          <span class="member-dash-num" id="memberStatusNum">—</span>
+          <span class="member-dash-label">Membership status</span>
+        </div>
+      </div>
+
+      <div class="member-attendance-block">
+        <h3>Attendance history</h3>
+        <div class="attendance-pill-row" id="memberAttendanceRow"></div>
+      </div>
+
+      <div class="member-photo-block">
+        <h3>Update photo</h3>
+        <div class="photo-upload-row">
+          <div class="photo-upload-preview" id="memberPhotoPreview">👤</div>
+          <input type="file" id="memberPhotoInput" accept="image/*">
+        </div>
+        <p class="member-photo-status" id="memberPhotoStatus"></p>
+      </div>
+
+      <button type="button" class="btn btn-outline btn-block" id="memberLogoutBtn" style="margin-top:22px;">Log out</button>
+    </div>
+
+    <p class="login-footnote">This is a front-end preview: it looks up your registration by email and checks your password against the date of birth you registered with.</p>
+  </div>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/registrations.js"></script>
+<script src="js/content-store.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>

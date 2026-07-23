@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRAFT Member Portal - Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .login-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 40px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .login-container h1 {
+      margin-top: 0;
+      color: var(--text-heading);
+    }
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+    }
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-login:hover {
+      background: #b58b29;
+    }
+    .error-message {
+      color: #C0524A;
+      margin-top: 15px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h1>Member Portal</h1>
+    <p style="color: var(--text-muted); margin-bottom: 30px;">Login with your Roll Number and Member ID.</p>
+    
+    <form id="memberLoginForm">
+      <div class="form-group">
+        <label>Roll Number</label>
+        <input type="text" id="rollNumber" class="form-control" required placeholder="e.g. 21B81A05AA">
+      </div>
+      <div class="form-group">
+        <label>Member ID</label>
+        <input type="text" id="memberId" class="form-control" required placeholder="e.g. CRAFT-2026-1234">
+      </div>
+      <button type="submit" class="btn-login" id="loginBtn">Access Dashboard</button>
+      <div id="errorMsg" class="error-message"></div>
+    </form>
+  </div>
+
+  <script type="module" src="js/convex-bundle.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("memberLoginForm");
+      const btn = document.getElementById("loginBtn");
+      const errorMsg = document.getElementById("errorMsg");
+
+      // Check if already logged in
+      const existingSession = sessionStorage.getItem("craft-member");
+      if (existingSession) {
+        window.location.href = "member-dashboard.html";
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        if (!window.convexClient) {
+          errorMsg.textContent = "Connecting to backend... please wait.";
+          errorMsg.style.display = "block";
+          return;
+        }
+
+        const rollNumber = document.getElementById("rollNumber").value.trim();
+        const memberId = document.getElementById("memberId").value.trim().toUpperCase();
+
+        btn.disabled = true;
+        btn.textContent = "Authenticating...";
+        errorMsg.style.display = "none";
+
+        try {
+          const member = await window.convexClient.mutation("membersAuth:login", {
+            rollNumber,
+            memberId
+          });
+          
+          // Store session securely (in a real app, use JWT/cookies)
+          sessionStorage.setItem("craft-member", JSON.stringify(member));
+          window.location.href = "member-dashboard.html";
+        } catch (err) {
+          errorMsg.textContent = err.message || "Invalid credentials. Please try again.";
+          errorMsg.style.display = "block";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Access Dashboard";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

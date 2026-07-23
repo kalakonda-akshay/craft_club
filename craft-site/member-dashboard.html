@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRAFT - Member Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/member.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="admin-header" style="justify-content: space-between; padding: 0 40px;">
+    <div class="admin-logo">CRAFT <span>Member Portal</span></div>
+    <div style="display: flex; gap: 20px; align-items: center;">
+      <span id="navMemberName" style="font-weight: 500;">Loading...</span>
+      <button class="btn btn-outline" id="logoutBtn" style="padding: 6px 12px; font-size: 14px;">Logout</button>
+    </div>
+  </header>
+
+  <main class="member-dashboard-layout" id="dashboardContent" style="display: none;">
+    
+    <!-- Sidebar Profile -->
+    <aside>
+      <div class="member-profile-card">
+        <img src="https://via.placeholder.com/150" alt="Avatar" class="member-avatar" id="profileAvatar">
+        <h2 class="member-name" id="profileName">Name</h2>
+        <div class="member-role" id="profileRole">CRAFT Member</div>
+        <div class="member-meta" id="profileRoll">Roll Number</div>
+        <div class="member-meta" id="profileDept">Dept & Year</div>
+        <div style="margin-top: 20px;">
+          <span class="status-badge status-badge--accepted" id="profileStatus">Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <section>
+      
+      <!-- Digital ID -->
+      <div class="digital-id-section">
+        <div class="digital-id-content">
+          <h2>Your Digital ID</h2>
+          <p style="color: var(--text-muted); margin-bottom: 20px;">Use this QR code for fast track check-ins at CRAFT events.</p>
+          <button class="btn btn-primary" id="downloadIdBtn">⬇ Download PDF</button>
+        </div>
+        
+        <div class="digital-id-card-wrapper" id="idCardWrapper">
+          <div class="id-card-inner">
+            <!-- Front -->
+            <div class="id-card-front">
+              <h3 style="color: var(--accent);">CRAFT</h3>
+              <p id="cardName" style="font-weight: bold; color: white; font-size: 20px; margin-bottom: 5px;">Name</p>
+              <p id="cardRoll">Roll</p>
+              <p id="cardId" style="color: var(--accent); margin-top: 15px;">CRAFT-2026-XXXX</p>
+            </div>
+            <!-- Back (QR) -->
+            <div class="id-card-back">
+              <img id="cardQrCode" src="" alt="QR Code">
+              <p>Scan for Attendance</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div>
+            <div class="stat-value" id="statAttendance">0%</div>
+            <div class="stat-label">Attendance</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div>
+            <div class="stat-value" id="statEvents">0</div>
+            <div class="stat-label">Events Attended</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎓</div>
+          <div>
+            <div class="stat-value" id="statCertificates">0</div>
+            <div class="stat-label">Certificates</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🚀</div>
+          <div>
+            <div class="stat-value" id="statSkills">0</div>
+            <div class="stat-label">Skills Level</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lists Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        <!-- Upcoming Events -->
+        <div class="dashboard-section">
+          <h3>Upcoming Events</h3>
+          <div id="upcomingEventsList">
+            <p style="color: var(--text-muted);">Loading events...</p>
+          </div>
+        </div>
+        
+        <!-- Certificates -->
+        <div class="dashboard-section">
+          <h3>Recent Certificates</h3>
+          <div id="certificatesList">
+            <p style="color: var(--text-muted);">Loading certificates...</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script type="module" src="js/convex-bundle.js"></script>
+  <script type="module" src="js/member-dashboard.js"></script>
+</body>
+</html>

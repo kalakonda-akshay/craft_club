@@ -1,0 +1,83 @@
+/* =========================================================
+   CRAFT — Content Manager admin page styles
+   (extends admin.css / style.css tokens; nothing shared is
+   modified here)
+========================================================= */
+
+/* ---- Spotlight-inspired hero banner ---- */
+.content-hero{
+  position:relative; overflow:hidden; background:#0a0a0c; padding:56px 32px 48px;
+  border-bottom:1px solid var(--line-dark);
+}
+.content-hero-glow{
+  position:absolute; top:-120px; left:-80px; width:480px; height:480px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 45%, transparent 70%);
+  filter:blur(10px); pointer-events:none;
+}
+.content-hero-eyebrow{
+  position:relative; font-family:var(--font-display); font-size:12px; color:var(--gold-300);
+  text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px; max-width:1180px; margin-left:auto; margin-right:auto;
+}
+.content-hero-title{
+  position:relative; font-family:var(--font-display); font-weight:700; font-size:clamp(30px,4vw,44px);
+  background:linear-gradient(to bottom, #fafafa 0%, #9a9a9a 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  max-width:1180px; margin:0 auto;
+}
+.content-hero-sub{
+  position:relative; color:var(--mist-200); font-size:14px; margin-top:14px; max-width:640px;
+  margin-left:auto; margin-right:auto; line-height:1.6;
+}
+.content-hero-eyebrow, .content-hero-title, .content-hero-sub{ padding-left:0; }
+@media (min-width:1180px){
+  .content-hero-eyebrow, .content-hero-title, .content-hero-sub{ padding-left:0; }
+}
+
+/* ---- Tabs ---- */
+.content-tabs{ display:flex; gap:10px; margin-bottom:32px; }
+.content-tab{
+  font-family:var(--font-display); font-size:13.5px; color:var(--ink-700); background:#fff;
+  border:1px solid var(--line-light); border-radius:999px; padding:10px 20px; cursor:pointer;
+}
+.content-tab.is-active{ background:var(--navy-950); color:#fff; border-color:var(--navy-950); }
+.content-panel{ display:none; }
+.content-panel.is-active{ display:block; }
+
+/* ---- Section headers ---- */
+.content-section-head h2{ font-size:19px; color:var(--navy-950); font-family:var(--font-display); }
+.content-section-head p{ font-size:13px; color:var(--ink-700); margin-top:4px; }
+
+/* ---- Editable cards ---- */
+.content-card{
+  background:#fff; border:1px solid var(--line-light); border-radius:var(--radius); padding:26px;
+  margin-top:20px; position:relative;
+}
+.content-card-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px 20px; }
+.content-card-grid .form-row{ margin-bottom:0; }
+.content-card-grid .form-row--full{ grid-column:1 / -1; }
+.content-card .form-row label{ font-size:11.5px; }
+.content-card .form-row input, .content-card .form-row textarea, .content-card .form-row select{
+  font-size:14px; padding:10px 12px;
+}
+.content-card textarea{ resize:vertical; min-height:60px; font-family:var(--font-body); }
+
+.content-item-remove{
+  position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:50%;
+  border:1px solid var(--line-light); background:#fff; color:#C0524A; cursor:pointer; font-size:14px;
+  display:flex; align-items:center; justify-content:center;
+}
+.content-item-remove:hover{ background:#C0524A; color:#fff; }
+
+.content-save-bar{ display:flex; align-items:center; gap:14px; margin-top:28px; flex-wrap:wrap; }
+.content-save-status{ font-family:var(--font-display); font-size:12.5px; color:#2E7D32; }
+.content-save-status.is-error{ color:#C0524A; }
+
+@media (max-width:700px){ .content-card-grid{ grid-template-columns:1fr; } }
+
+/* ---- Image upload control (Build of Month / Projects / Gallery) ---- */
+.content-image-upload{ display:flex; align-items:center; gap:14px; }
+.content-image-preview{
+  width:64px; height:64px; border-radius:10px; background:var(--cream-100); border:1px solid var(--line-light);
+  display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--ink-700); overflow:hidden; flex:none;
+}
+.content-image-input{ font-size:12.5px; color:var(--ink-700); max-width:220px; }

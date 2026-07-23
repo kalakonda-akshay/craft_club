@@ -1,0 +1,222 @@
+/* =========================================================
+   LOGIN PAGE — volumetric spotlight room, recreated in pure
+   CSS/SVG (the reference used React Three Fiber + drei; this
+   is a vanilla-CSS approximation of the same theatrical look
+   for a static site). Reuses design tokens from style.css.
+========================================================= */
+
+html, body.login-body{ height:100%; }
+body.login-body{
+  margin:0; background:#000; overflow-x:hidden; position:relative;
+  font-family:var(--font-body);
+}
+
+/* ---- Room shell ---- */
+.room{ position:fixed; inset:0; overflow:hidden; background:#000; z-index:0; }
+
+.room-wall{ position:absolute; inset:0; }
+.room-wall--back{
+  clip-path:polygon(22% 10%, 78% 10%, 78% 70%, 22% 70%);
+  background:linear-gradient(to bottom, #16161a 0%, #08080a 100%);
+}
+.room-wall--ceiling{
+  clip-path:polygon(0% 0%, 100% 0%, 78% 10%, 22% 10%);
+  background:linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.85) 100%);
+}
+.room-wall--left{
+  clip-path:polygon(0% 0%, 22% 10%, 22% 70%, 0% 100%);
+  background:linear-gradient(to right, #08080a 0%, #121214 70%, #1a1a1c 100%);
+}
+.room-wall--right{
+  clip-path:polygon(100% 0%, 78% 10%, 78% 70%, 100% 100%);
+  background:linear-gradient(to left, #08080a 0%, #121214 70%, #1a1a1c 100%);
+}
+.room-wall--floor{
+  clip-path:polygon(0% 100%, 100% 100%, 78% 70%, 22% 70%);
+  background:linear-gradient(to top, #0f0f11 0%, #060608 100%);
+}
+
+/* ---- Lights: glow pools + soft cones, controlled via .is-lit ---- */
+.room-lights{ position:absolute; inset:0; z-index:5; opacity:0; transition:opacity .5s ease; mix-blend-mode:screen; }
+.room-lights.is-lit{ opacity:1; }
+.room-lights.is-flicker{ transition:none; }
+.spot-glow{
+  position:absolute; left:var(--spot-x); top:60%; width:26%; height:46%; transform:translateX(-50%);
+  background:radial-gradient(ellipse at center, rgba(230,240,255,0.18) 0%, transparent 70%);
+  filter:blur(4px);
+}
+.spot-cone{
+  position:absolute; left:var(--spot-x); top:10%; width:14%; height:60%; transform:translateX(-50%);
+  background:linear-gradient(to bottom, rgba(230,240,255,0.22) 0%, rgba(230,240,255,0.05) 60%, transparent 100%);
+  clip-path:polygon(46% 0%, 54% 0%, 100% 100%, 0% 100%);
+  filter:blur(2px);
+}
+
+/* ---- Physical ceiling fixtures — recreated cylindrical spotlight
+      housing (mount → ball joint → ridged barrel → glowing lens) ---- */
+.fixtures{ position:absolute; inset:0; z-index:6; pointer-events:none; }
+.fixture{ position:absolute; left:var(--spot-x); top:0; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; }
+
+.fixture-mount{
+  width:10px; height:22px; border-radius:5px;
+  background:linear-gradient(to right, #555 0%, #ddd 35%, #888 55%, #222 100%);
+  border:1px solid #000; display:flex; flex-direction:column; align-items:center; justify-content:space-evenly;
+  box-shadow:0 2px 4px rgba(0,0,0,0.6);
+}
+.mount-screw{ width:4px; height:4px; border-radius:50%; background:#111; box-shadow:inset 0 1px 1px rgba(0,0,0,0.9); }
+
+.fixture-ball{
+  width:10px; height:10px; border-radius:50%; margin-top:2px;
+  background:radial-gradient(circle at 30% 30%, #888, #111 75%);
+  box-shadow:0 2px 5px rgba(0,0,0,0.7);
+}
+
+.fixture-barrel{
+  position:relative; margin-top:2px; width:38px; height:58px; border-radius:6px 6px 16px 16px;
+  border:1px solid #000; overflow:hidden;
+  background:linear-gradient(to right, #0c0c0c 0%, #3a3a3a 28%, #666 48%, #2c2c2c 72%, #050505 100%);
+  box-shadow:0 10px 22px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.12);
+}
+.barrel-ridge{
+  position:absolute; left:0; right:0; height:2px; background:rgba(0,0,0,0.75);
+  box-shadow:0 1px 0 rgba(255,255,255,0.1);
+}
+.barrel-ridge:nth-child(1){ top:16px; }
+.barrel-ridge:nth-child(2){ top:28px; }
+.barrel-ridge:nth-child(3){ top:40px; }
+
+.fixture-lens{
+  position:absolute; bottom:-3px; left:50%; transform:translateX(-50%);
+  width:32px; height:14px; border-radius:50%; border:2px solid #000;
+  background:radial-gradient(ellipse at center, #1c1c1c, #000);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  box-shadow:0 6px 10px rgba(0,0,0,0.9);
+}
+.lens-bulb{
+  width:22px; height:8px; border-radius:50%; background:#141414;
+  transition:background .15s ease, box-shadow .15s ease;
+}
+.lens-bulb.is-on{
+  background:#fff;
+  box-shadow:0 0 18px 7px rgba(255,255,255,0.9), inset 0 0 6px #fff;
+}
+
+/* ---- Vignette + grain ---- */
+.room-vignette{
+  position:absolute; inset:0; z-index:8;
+  background:radial-gradient(ellipse 90% 80% at 50% 45%, transparent 50%, rgba(0,0,0,0.65) 100%);
+}
+.room-grain{
+  position:absolute; inset:0; z-index:9; opacity:0.05; mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size:256px 256px;
+}
+
+/* ---- Nav on top of the room ---- */
+.login-nav{
+  position:relative; z-index:20; display:flex; align-items:center; justify-content:space-between;
+  padding:24px 32px; max-width:1180px; margin:0 auto;
+}
+.login-nav .brand{ font-family:var(--font-display); font-weight:700; font-size:19px; color:#fff; display:flex; align-items:center; gap:8px; }
+.login-nav .brand-mark{ color:var(--gold-500); }
+
+/* ---- Login content ---- */
+.login-main{ position:relative; z-index:20; display:flex; justify-content:center; padding:40px 24px 100px; }
+.login-card-wrap{ width:100%; max-width:440px; text-align:center; }
+.login-eyebrow{
+  font-family:var(--font-display); font-size:12.5px; color:var(--gold-300); letter-spacing:0.1em;
+  text-transform:uppercase; margin-bottom:14px;
+}
+.login-title{
+  font-family:var(--font-display); font-size:clamp(32px,5vw,44px); color:#fff; font-weight:700; margin-bottom:14px;
+}
+.login-sub{ font-size:14.5px; color:var(--mist-200); line-height:1.6; margin-bottom:36px; }
+
+.login-card{
+  background:rgba(21,44,71,0.55); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px; padding:34px 30px; text-align:left; box-shadow:0 30px 60px rgba(0,0,0,0.5);
+}
+.login-card .form-row label{ color:var(--mist-200); }
+.login-card .form-row input{
+  background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.18); color:#fff;
+}
+.login-card .form-row input::placeholder{ color:rgba(255,255,255,0.35); }
+.login-card .form-row input:focus{ border-color:var(--gold-500); }
+
+.login-row-between{ display:flex; align-items:center; justify-content:space-between; margin:-6px 0 20px; flex-wrap:wrap; gap:10px; }
+.login-row-between .checkbox-label{ font-size:12.5px; }
+.login-forgot{ font-size:12.5px; color:var(--gold-300); font-family:var(--font-display); }
+.login-forgot:hover{ text-decoration:underline; }
+
+.login-divider{
+  display:flex; align-items:center; gap:14px; margin:26px 0 18px; font-size:12px; color:var(--mist-400);
+  font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em;
+}
+.login-divider::before, .login-divider::after{ content:''; flex:1; height:1px; background:rgba(255,255,255,0.14); }
+
+.login-register-link{ border-color:rgba(255,255,255,0.25); color:#fff; }
+.login-register-link:hover{ background:rgba(255,255,255,0.1); }
+
+.login-footnote{ margin-top:22px; font-size:11.5px; color:var(--mist-400); }
+
+/* ---- Member dashboard (post-login) ---- */
+.login-card-wrap.is-dashboard{ max-width:560px; }
+
+.member-alert-banner{
+  background:rgba(251,225,223,0.95); color:#7A2A22; border:1px solid rgba(162,58,49,0.35);
+  border-radius:12px; padding:14px 18px; font-size:13px; line-height:1.55; text-align:left;
+  margin-bottom:18px;
+}
+
+.member-dash-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:20px; }
+.member-dash-tile{
+  background:rgba(21,44,71,0.55); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px; padding:18px; text-align:center;
+}
+.member-dash-num{ display:block; font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--gold-300); }
+.member-dash-label{ display:block; margin-top:6px; font-size:11.5px; color:var(--mist-200); }
+
+.member-attendance-block, .member-photo-block{
+  margin-top:22px; text-align:left; background:rgba(21,44,71,0.4); border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px; padding:18px;
+}
+.member-attendance-block h3, .member-photo-block h3{
+  font-family:var(--font-display); font-size:13px; color:#fff; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.04em;
+}
+.member-attendance-block .attendance-pill-row{ display:flex; gap:6px; flex-wrap:wrap; }
+.member-attendance-block .attendance-pill{
+  width:28px; height:28px; border-radius:7px; font-size:11px; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; border:1px solid rgba(255,255,255,0.15);
+}
+.member-attendance-block .attendance-pill.is-present{ background:rgba(58,166,92,0.25); color:#7FE0A0; }
+.member-attendance-block .attendance-pill.is-absent{ background:rgba(192,82,74,0.25); color:#F0A9A2; }
+.member-attendance-block .attendance-pill.is-unmarked{ background:rgba(255,255,255,0.06); color:var(--mist-400); }
+.attendance-empty{ font-size:12.5px; color:var(--mist-400); }
+
+.member-photo-block .photo-upload-preview{ background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.2); color:var(--gold-300); }
+.member-photo-block input[type="file"]{ color:var(--mist-200); }
+.member-photo-status{ margin-top:10px; font-size:12px; color:#7FE0A0; }
+
+/* ---- Fade-in choreography (mirrors the flicker-then-settle demo) ---- */
+.reveal-in{ opacity:0; transform:translateY(16px); transition:opacity 1s cubic-bezier(.16,1,.3,1), transform 1s cubic-bezier(.16,1,.3,1); }
+.reveal-in.is-in{ opacity:1; transform:translateY(0); }
+
+@media (prefers-reduced-motion: reduce){
+  .reveal-in{ transition:none; opacity:1; transform:none; }
+  .room-lights{ transition:none; opacity:1; }
+  .lens-bulb{ transition:none; }
+}
+
+@media (max-width:640px){
+  .login-nav{ padding:20px; }
+  .login-card{ padding:28px 22px; }
+}
+
+/* ---- Forgot password info panel ---- */
+.forgot-password-panel{
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:10px;
+  padding:14px 16px; margin:-4px 0 18px; font-size:12.5px; color:var(--mist-200); line-height:1.6;
+}
+.forgot-password-panel p{ margin-bottom:8px; }
+.forgot-password-panel p:last-child{ margin-bottom:0; }
+.forgot-password-panel a{ color:var(--gold-300); text-decoration:underline; }

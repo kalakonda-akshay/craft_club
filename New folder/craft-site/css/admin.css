@@ -1,0 +1,180 @@
+/* =========================================================
+   ADMIN PANEL — coordinator dashboard styling.
+   Reuses design tokens + fonts from style.css.
+========================================================= */
+body.admin-body{ margin:0; background:var(--cream-50); font-family:var(--font-body); color:var(--ink-900); min-height:100vh; }
+
+.brand{ font-family:var(--font-display); font-weight:700; font-size:19px; color:var(--navy-950); display:flex; align-items:center; gap:8px; text-decoration:none; }
+.brand-mark{ color:var(--gold-500); }
+.admin-tag{
+  font-size:11px; background:var(--navy-950); color:var(--gold-300); padding:3px 9px; border-radius:999px;
+  margin-left:4px; text-transform:uppercase; letter-spacing:0.05em;
+}
+
+/* ---- Gate screen ---- */
+.admin-gate{
+  min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+  background:radial-gradient(120% 120% at 20% -10%, var(--navy-700) 0%, var(--navy-900) 45%, var(--navy-950) 100%);
+}
+.admin-gate-card{
+  width:100%; max-width:420px; background:rgba(255,255,255,0.04); border:1px solid var(--line-dark);
+  border-radius:18px; padding:40px 34px; text-align:center; backdrop-filter:blur(10px);
+}
+.admin-gate-eyebrow{ font-family:var(--font-display); font-size:12px; color:var(--gold-300); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px; }
+.admin-gate-card h1{ font-family:var(--font-display); font-size:28px; color:#fff; margin-bottom:14px; }
+.admin-gate-sub{ font-size:13px; color:var(--mist-200); line-height:1.6; margin-bottom:28px; }
+.admin-gate-card .form-row label{ color:var(--mist-200); text-align:left; }
+.admin-gate-card .form-row input{ background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.18); color:#fff; }
+.admin-gate-hint{ margin-top:14px; font-size:12px; color:var(--mist-400); }
+.admin-gate-hint code{ background:rgba(255,255,255,0.1); padding:2px 7px; border-radius:5px; color:var(--gold-300); }
+
+/* ---- Dashboard shell ---- */
+.admin-header{
+  display:flex; align-items:center; justify-content:space-between; padding:20px 32px;
+  border-bottom:1px solid var(--line-light); background:#fff; position:sticky; top:0; z-index:20;
+}
+.admin-header-actions{ display:flex; gap:10px; }
+.admin-header .btn{ padding:10px 18px; font-size:12.5px; }
+.admin-header .btn-outline{ border-color:var(--navy-800); color:var(--navy-800); }
+.admin-header .btn-ghost{ border:1px solid var(--line-light); color:var(--ink-700); }
+
+.admin-main{ max-width:1180px; margin:0 auto; padding:32px 24px 80px; }
+
+/* ---- Stat cards ---- */
+.admin-stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:32px; }
+.admin-stat-card{
+  background:#fff; border:1px solid var(--line-light); border-radius:14px; padding:22px;
+}
+.admin-stat-num{ font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--navy-950); display:block; }
+.admin-stat-label{ font-size:12.5px; color:var(--ink-700); margin-top:6px; display:block; }
+.admin-stat-card.is-warning .admin-stat-num{ color:#B8860B; }
+.admin-stat-bar{ height:5px; background:var(--cream-100); border-radius:4px; margin-top:12px; overflow:hidden; }
+.admin-stat-bar-fill{ height:100%; background:var(--gold-500); border-radius:4px; }
+@media (max-width:860px){ .admin-stats{ grid-template-columns:repeat(2,1fr); } }
+
+/* ---- Toolbar ---- */
+.admin-toolbar{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+.admin-filters{ display:flex; gap:8px; flex-wrap:wrap; }
+.admin-filter-chip{
+  font-family:var(--font-display); font-size:12.5px; color:var(--navy-600); background:#fff;
+  border:1px solid var(--line-light); border-radius:999px; padding:8px 16px; cursor:pointer;
+}
+.admin-filter-chip.is-active{ background:var(--navy-950); color:#fff; border-color:var(--navy-950); }
+.admin-search{
+  flex:1; min-width:220px; padding:10px 14px; border:1.5px solid var(--line-light); border-radius:8px;
+  font-family:var(--font-body); font-size:14px; background:#fff; color:var(--ink-900);
+}
+.admin-toolbar-actions{ display:flex; gap:10px; }
+.admin-toolbar-actions .btn{ padding:9px 16px; font-size:12px; }
+
+/* ---- Table ---- */
+.admin-table-wrap{ background:#fff; border:1px solid var(--line-light); border-radius:14px; overflow:hidden; }
+.admin-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+.admin-table th{
+  text-align:left; font-family:var(--font-display); font-size:11px; text-transform:uppercase; letter-spacing:0.05em;
+  color:var(--ink-700); background:var(--cream-100); padding:14px 16px; border-bottom:1px solid var(--line-light);
+}
+.admin-table td{ padding:14px 16px; border-bottom:1px solid var(--line-light); vertical-align:middle; }
+.admin-table tr:last-child td{ border-bottom:none; }
+.admin-applicant-name{ font-weight:600; color:var(--navy-950); }
+.admin-applicant-meta{ font-size:11.5px; color:var(--ink-700); margin-top:2px; }
+
+.status-badge{
+  font-family:var(--font-display); font-size:11px; text-transform:uppercase; letter-spacing:0.04em;
+  padding:4px 10px; border-radius:999px; display:inline-block;
+}
+.status-badge--pending{ background:#FFF4D6; color:#8A6A1E; }
+.status-badge--accepted{ background:#DCF3E4; color:#1E7A44; }
+.status-badge--rejected{ background:#FBE1DF; color:#A23A31; }
+.status-badge--waitlist{ background:#E4E9F2; color:var(--navy-800); }
+
+.admin-actions{ display:flex; gap:6px; flex-wrap:wrap; }
+.admin-action-btn{
+  font-family:var(--font-display); font-size:11px; padding:6px 11px; border-radius:6px; border:1px solid var(--line-light);
+  background:#fff; cursor:pointer; color:var(--ink-700);
+}
+.admin-action-btn:hover{ background:var(--cream-100); }
+.admin-action-btn--accept{ color:#1E7A44; border-color:#1E7A44; }
+.admin-action-btn--reject{ color:#A23A31; border-color:#A23A31; }
+.admin-action-btn--waitlist{ color:var(--navy-800); border-color:var(--navy-800); }
+
+.admin-empty{ padding:48px; text-align:center; color:var(--ink-700); font-size:14px; }
+
+@media (max-width:760px){
+  .admin-table thead{ display:none; }
+  .admin-table, .admin-table tbody, .admin-table tr, .admin-table td{ display:block; width:100%; }
+  .admin-table tr{ padding:16px; border-bottom:1px solid var(--line-light); }
+  .admin-table td{ border:none; padding:4px 0; }
+  .admin-table td::before{ content:attr(data-label); display:block; font-family:var(--font-display); font-size:10px; color:var(--mist-400); text-transform:uppercase; margin-bottom:2px; }
+}
+
+/* Theme toggle needs dark-on-light styling here (admin header is white,
+   unlike the main site's dark nav where the shared .theme-toggle lives) */
+.admin-header .theme-toggle{
+  color:var(--navy-800); border-color:var(--line-light);
+}
+.admin-header .theme-toggle:hover{ background:var(--cream-100); }
+
+/* ---- Sessions-attended stepper ---- */
+.sessions-stepper{ display:flex; align-items:center; gap:8px; }
+.sessions-btn{
+  width:22px; height:22px; border-radius:50%; border:1px solid var(--line-light); background:#fff;
+  color:var(--navy-800); font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  line-height:1;
+}
+.sessions-btn:hover{ background:var(--navy-950); color:#fff; }
+.sessions-count{ font-family:var(--font-display); font-size:13px; color:var(--navy-950); min-width:16px; text-align:center; }
+
+/* ---- ID Card action button ---- */
+.admin-action-btn--idcard{ background:var(--cream-100); color:var(--navy-800); border:1px solid var(--line-light); }
+.admin-action-btn--idcard:hover{ background:var(--navy-950); color:#fff; }
+
+/* ---- ID Card modal ---- */
+.idcard-modal-overlay{
+  position:fixed; inset:0; background:rgba(10,15,20,0.85); z-index:200; display:none;
+  align-items:center; justify-content:center; padding:24px;
+}
+.idcard-modal-overlay.is-open{ display:flex; }
+.idcard-modal-box{ position:relative; max-width:480px; width:100%; }
+.idcard-modal-box .lightbox-close{
+  position:absolute; top:-14px; right:-14px; width:34px; height:34px; border-radius:50%; border:none;
+  background:#fff; color:var(--navy-950); font-size:16px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.3); z-index:2;
+}
+
+/* ---- Applicant avatar (photo or initials) ---- */
+.admin-applicant-row{ display:flex; align-items:flex-start; gap:10px; }
+.admin-avatar{
+  width:36px; height:36px; border-radius:50%; overflow:hidden; flex:none; display:flex;
+  align-items:center; justify-content:center; background:var(--navy-800); color:var(--gold-300);
+  font-family:var(--font-display); font-size:12px; font-weight:700;
+}
+.admin-avatar-img{ width:100%; height:100%; object-fit:cover; }
+.absence-flag{ font-size:13px; margin-left:4px; }
+tr.is-flagged-row{ background:#FFF7F6; }
+
+/* ---- Attendance pills (per conducted session) ---- */
+.attendance-pill-row{ display:flex; flex-wrap:wrap; gap:4px; max-width:220px; }
+.attendance-pill{
+  width:24px; height:24px; border-radius:6px; border:1px solid var(--line-light); background:#fff;
+  font-family:var(--font-display); font-size:10.5px; font-weight:700; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; color:var(--ink-700);
+}
+.attendance-pill.is-present{ background:#DCF3E4; border-color:#9FDBB5; color:#1E7A44; }
+.attendance-pill.is-absent{ background:#FBE1DF; border-color:#F0A9A2; color:#A23A31; }
+.attendance-pill.is-unmarked{ background:var(--cream-100); color:var(--mist-400); }
+.attendance-summary{ font-size:11px; color:var(--ink-700); margin-top:6px; }
+
+/* ---- Sessions-conducted / alert stat cards ---- */
+.admin-stat-card--sessions{ display:flex; flex-direction:column; gap:8px; }
+.admin-add-session-btn{ align-self:flex-start; padding:6px 14px; font-size:11.5px; margin-top:2px; }
+.admin-stat-card--alert{ background:#FBE1DF; border-color:#F0A9A2; }
+.admin-stat-card--alert .admin-stat-num, .admin-stat-card--alert .admin-stat-label{ color:#A23A31; }
+
+/* ---- ID card modal extras: attendance row + alert banner ---- */
+.idcard-attendance-row{ display:flex; gap:4px; flex-wrap:wrap; padding:0 22px 16px; }
+.idcard-attendance-row .attendance-pill{ cursor:default; }
+.idcard-alert{
+  margin:0 22px 16px; padding:10px 14px; background:#FBE1DF; color:#A23A31; border-radius:8px;
+  font-family:var(--font-display); font-size:12px;
+}

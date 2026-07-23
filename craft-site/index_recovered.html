@@ -1,0 +1,714 @@
+Created At: 2026-07-23T01:35:47+05:30
+Completed At: 2026-07-23T01:35:47+05:30
+File Path: `file:///d:/club%20backend/craft-site/index.html`
+Total Lines: 706
+Total Bytes: 36246
+Showing lines 1 to 706
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1: <!DOCTYPE html>
+2: <html lang="en">
+3: <head>
+4: <meta charset="UTF-8">
+5: <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+6: <title>CRAFT — Council for Real-world Applications & Future Tech</title>
+7: <meta name="description" content="CRAFT is the student-led Tech Radar club of the CSE Department at Amrita Vishwa Vidyapeetham, Nagercoil Campus — hands-on Build-Along workshops in trending languages, AI agents, and production deployment.">
+8: 
+9: <!-- Open Graph -->
+10: <meta property="og:type" content="website">
+11: <meta property="og:title" content="CRAFT — Council for Real-world Applications & Future Tech">
+12: <meta property="og:description" content="Student-led Build-Along workshops at Amrita Vishwa Vidyapeetham, Nagercoil Campus — real projects, deployed live, in 90 minutes.">
+13: <meta property="og:site_name" content="CRAFT">
+14: <meta name="twitter:card" content="summary_large_image">
+15: <meta name="twitter:title" content="CRAFT — Council for Real-world Applications & Future Tech">
+16: <meta name="twitter:description" content="Student-led Build-Along workshops at Amrita Vishwa Vidyapeetham, Nagercoil Campus.">
+17: 
+18: <script type="application/ld+json">
+19: {
+20:   "@context": "https://schema.org",
+21:   "@type": "Event",
+22:   "name": "AI Agent Build-Along: Automate Your Notes",
+23:   "startDate": "2026-08-14T16:00:00+05:30",
+24:   "endDate": "2026-08-14T17:30:00+05:30",
+25:   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+26:   "eventStatus": "https://schema.org/EventScheduled",
+27:   "location": {
+28:     "@type": "Place",
+29:     "name": "CSE Seminar Hall, Block C",
+30:     "address": "Amrita Vishwa Vidyapeetham, Nagercoil Campus, Tamil Nadu"
+31:   },
+32:   "organizer": {
+33:     "@type": "Organization",
+34:     "name": "CRAFT — Council for Real-world Applications & Future Tech"
+35:   },
+36:   "description": "A hands-on Build-Along workshop where members build and deploy an AI-powered note aggregator using the Gemini API."
+37: }
+38: </script>
+39: <link rel="preconnect" href="https://fonts.googleapis.com">
+40: <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+41: <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+42: <link rel="stylesheet" href="css/style.css">
+43: <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B1A2C'/%3E%3Cpath d='M30 32 L18 50 L30 68' stroke='%23C99A2E' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M70 32 L82 50 L70 68' stroke='%23FFFFFF' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='46' y='58' width='9' height='9' rx='2' fill='%23C99A2E'/%3E%3C/svg%3E">
+44: </head>
+45: <body>
+46: 
+47: <a class="skip-link" href="#main">Skip to content</a>
+48: 
+49: <!-- ============ NAV ============ -->
+50: <div class="scroll-progress" id="scrollProgress"></div>
+51: <header class="site-nav" id="top">
+52:   <div class="wrap nav-inner">
+53:     <a class="brand" href="#top">
+54:       <span class="brand-mark">&gt;_</span> CRAFT
+55:     </a>
+56:     <nav class="nav-links" aria-label="Primary">
+57:       <a href="#about">About</a>
+58:       <a href="#agenda">Agenda</a>
+59:       <a href="#leadership">Team</a>
+60:       <a href="#events">Events</a>
+61:       <a href="#join">Join</a>
+62:     </nav>
+63:     <a class="nav-login-link" href="login.html">Login</a>
+64:     <a class="btn btn-ghost nav-cta" href="#join">Register →</a>
+65:     <button class="theme-toggle" id="themeToggle" aria-label="Toggle color / mono theme" title="Toggle color / mono theme">◐</button>
+66:     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+67:       <span></span><span></span><span></span>
+68:     </button>
+69:   </div>
+70:   <nav class="nav-links nav-links--mobile" id="mobileMenu" aria-label="Mobile">
+71:     <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">&times;</button>
+72:     <a href="#about">About</a>
+73:     <a href="#agenda">Agenda</a>
+74:     <a href="#leadership">Team</a>
+75:     <a href="#events">Events</a>
+76:     <a href="#join">Join</a>
+77:     <a href="login.html" style="color:var(--gold-300);">Login</a>
+78:   </nav>
+79: </header>
+80: 
+81: <main id="main">
+82: 
+83:   <!-- ============ HERO ============ -->
+84:   <section class="hero">
+85:     <canvas id="heroCanvas" aria-hidden="true"></canvas>
+86:     <div class="hero-noise" aria-hidden="true"></div>
+87:     <div class="wrap hero-inner">
+88:       <p class="eyebrow"><span class="dot"></span> Dept. of CSE · Amrita Vishwa Vidyapeetham, Nagercoil Campus</p>
+89:       <h1 class="hero-title">
+90:         Council for Real-world<br>
+91:         Applications &amp; Future Tech
+92:       </h1>
+93:       <p class="hero-sub">
+94:         The syllabus teaches C and Java. The market hires for TypeScript, AI agents, and shipped products.
+95:         CRAFT is the student-run Tech Radar that closes that gap — one live, deployed build at a time.
+96:       </p>
+97:       <div class="hero-actions">
+98:         <a href="#join" class="btn btn-primary">Claim one of 100 seats</a>
+99:         <a href="#agenda" class="btn btn-outline">See the club agenda</a>
+100:       </div>
+101:       <p class="hero-note">Ball breaks the pixels above — hover to redirect it. <span class="reduced-only">(Animation paused: reduced motion is on.)</span></p>
+102:     </div>
+103:   </section>
+104: 
+105:   <!-- ============ TICKER ============ -->
+106:   <section class="ticker" aria-label="Technologies covered">
+107:     <div class="ticker-track">
+108:       <span>TypeScript</span><span>·</span>
+109:       <span>Gemini API</span><span>·</span>
+110:       <span>AI Agents</span><span>·</span>
+111:       <span>Tailwind CSS</span><span>·</span>
+112:       <span>Supabase</span><span>·</span>
+113:       <span>Vercel</span><span>·</span>
+114:       <span>JWT Auth</span><span>·</span>
+115:       <span>TypeScript</span><span>·</span>
+116:       <span>Gemini API</span><span>·</span>
+117:       <span>AI Agents</span><span>·</span>
+118:       <span>Tailwind CSS</span><span>·</span>
+119:       <span>Supabase</span><span>·</span>
+120:       <span>Vercel</span><span>·</span>
+121:       <span>JWT Auth</span><span>·</span>
+122:     </div>
+123:   </section>
+124:   <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+125: 
+126: 
+127:   <!-- ============ ABOUT THE CAMPUS ============ -->
+128:   <section class="section" id="about">
+129:     <div class="wrap">
+130:       <div class="about-block reveal">
+131:         <h2>Amrita Vishwa Vidyapeetham</h2>
+132:         <p class="about-sub">Nagercoil Campus, Tamil Nadu</p>
+133:         <div class="about-body">
+134:           <p>
+135:             Amrita Vishwa Vidyapeetham is a multi-campus, multidisciplinary research university accredited with
+136:             the highest possible grade 'A++' by NAAC. Consistently ranked among the top universities in India,
+137:             Amrita is known for its commitment to excellence in education, research, and community service.
+138:           </p>
+139:           <p>
+140:             The Nagercoil Campus, nestled in the southernmost tip of India, offers a vibrant academic environment
+141:             with state-of-the-art facilities. The campus provides undergraduate and postgraduate programs in
+142:             Engineering, Sciences, and Management, fostering holistic development of students.
+143:           </p>
+144:           <p>
+145:             CRAFT operates within the Department of Computer Science and Engineering, under the guidance of the
+146:             Faculty Advisory Board, making it a direct extension of the campus's commitment to hands-on,
+147:             industry-relevant learning alongside the core academic curriculum.
+148:           </p>
+149:         </div>
+150:       </div>
+151:     </div>
+152:   </section>
+153: 
+154:   <!-- ============ 01 / CLUB AGENDA ============ -->
+155:   <section class="section" id="agenda">
+156:     <div class="wrap">
+157:       <p class="kicker">01 / Club Agenda</p>
+158:       <h2 class="section-title">Learn it. Build it. Ship it.</h2>
+159:       <p class="section-lede">
+160:         CRAFT helps students move from classroom concepts to real-world outcomes through practical learning,
+161:         collaborative building, and visible work.
+162:       </p>
+163: 
+164:       <div class="process-flow">
+165:         <div class="process-line" aria-hidden="true"><div class="process-line-fill" id="processLineFill"><span class="process-line-tip"></span></div></div>
+166: 
+167:         <div class="process-stage reveal">
+168:           <div class="process-num">01</div>
+169:           <div class="process-content">
+170:             <span class="process-tag">INPUT</span>
+171:             <h3>Discover</h3>
+172:             <p>Explore new technologies, tools, opportunities, and ideas beyond the classroom.</p>
+173:           </div>
+174:         </div>
+175: 
+176:         <div class="process-stage process-stage--dark reveal">
+177:           <div class="process-num">02</div>
+178:           <div class="process-content">
+179:             <span class="process-tag">FOUNDATION</span>
+180:             <h3>Learn</h3>
+181:             <p>Understand the foundations through focused workshops, build-alongs, resources, and peer guidance.</p>
+182:           </div>
+183:         </div>
+184: 
+185:         <div class="process-stage reveal">
+186:           <div class="process-num">03</div>
+187:           <div class="process-content">
+188:             <span class="process-tag">OUTPUT</span>
+189:             <h3>Build</h3>
+190:             <p>Turn learning into practical projects, prototypes, portfolios, and real problem-solving work.</p>
+191:           </div>
+192:         </div>
+193: 
+194:         <div class="process-stage process-stage--dark reveal">
+195:           <div class="process-num">04</div>
+196:           <div class="process-content">
+197:             <span class="process-tag">NEXT STEP</span>
+198:             <h3>Deploy</h3>
+199:             <p>Test, document, deploy, and share work through GitHub, live demos, showcases, and events.</p>
+200:           </div>
+201:         </div>
+202: 
+203:         <div class="process-stage reveal">
+204:           <div class="process-num">05</div>
+205:           <div class="process-content">
+206:             <span class="process-tag">OUTCOME</span>
+207:             <h3>Grow</h3>
+208:             <p>Build confidence, leadership, collaboration, technical awareness, and career readiness.</p>
+209:           </div>
+210:         </div>
+211:       </div>
+212:     </div>
+213:   </section>
+214:   <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+215: 
+216: 
+217:   <!-- ============ 02 / THE METHOD (15-60-15) ============ -->
+218:   <section class="section section--dark" id="framework">
+219:     <div class="wrap">
+220:       <p class="kicker kicker--light">02 / The Method</p>
+221:       <h2 class="section-title section-title--light">One session. Ninety minutes.<br>One visible outcome.</h2>
+222:       <p class="section-lede section-lede--light">
+223:         Every CRAFT session is designed to move from understanding to execution. Members leave with something
+224:         tested, documented, deployed, or ready to share.
+225:       </p>
+226: 
+227:       <div class="method-track">
+228:         <div class="method-step">
+229:           <div class="method-num">15</div>
+230:           <span class="method-unit">min</span>
+231:           <h3>Brief &amp; Blueprint</h3>
+232:           <p>A quick walkthrough of what's being built and why it matters, before anyone touches code.</p>
+233:         </div>
+234:         <div class="method-arrow">→</div>
+235:         <div class="method-step method-step--active">
+236:           <div class="method-num">60</div>
+237:           <span class="method-unit">min</span>
+238:           <h3>Build Together</h3>
+239:           <p>Members build hands-on with peer and coordinator support, moving from concept to working output.</p>
+240:         </div>
+241:         <div class="method-arrow">→</div>
+242:         <div class="method-step">
+243:           <div class="method-num">15</div>
+244:           <span class="method-unit">min</span>
+245:           <h3>Test, Deploy &amp; Share</h3>
+246:           <p>Every build gets tested, documented, and shared — deployed live or pushed to GitHub.</p>
+247:         </div>
+248:       </div>
+249:     </div>
+250:   </section>
+251:   <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+252: 
+253: 
+254:   <!-- ============ MESSAGES FROM LEADERSHIP (voices) ============ -->
+255:   <section class="section" id="leadership-voices">
+256:     <div class="wrap">
+257:       <p class="kicker">— Voices —</p>
+258:       <h2 class="section-title">Messages from Leadership</h2>
+259: 
+260:       <div class="grid-2 grid-2--centered" style="margin-top:40px;">
+261:         <article class="leader-card reveal">
+262:           <div class="photo-ring photo-ring--sm"><div class="photo-ring-inner">👤</div></div>
+263:           <p class="leader-quote">CRAFT gives our students the space to explore technologies beyond the classroom. When students build real projects and deploy them, they don't just learn — they gain the confidence and portfolio that industry actually looks for.</p>
+264:           <p class="leader-name">Thangam V</p>
+265:           <p class="leader-role">Faculty Coordinator, CRAFT</p>
+266:         </article>
+267:         <article class="leader-card reveal">
+268:           <div class="photo-ring photo-ring--sm"><div class="photo-ring-inner">👤</div></div>
+269:           <p class="leader-quote">Every student who joins CRAFT should leave with something they built, not just something they learned. That shift from theory to practical creation is what makes this club valuable.</p>
+270:           <p class="leader-name">Sasikala</p>
+271:           <p class="leader-role">Faculty Co-Coordinator, CRAFT</p>
+272:         </article>
+273:       </div>
+274:     </div>
+275:   </section>
+276:   <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+277: 
+278: 
+279:   <!-- ============ 04 / FACULTY COORDINATORS ============ -->
+280:   <section class="section section--dark" id="faculty">
+281:     <div class="wrap">
+282:       <p class="kicker kicker--light">03 / Faculty Coordinators</p>
+283:       <h2 class="section-title section-title--light">Guidance behind every build.</h2>
+284:       <p class="section-lede section-lede--light">
+285:         CRAFT is supported by faculty guidance that helps keep the club structured, practical, responsible,
+286:         and aligned with campus values.
+287:       </p>
+288: 
+289:       <div class="grid-2" style="margin-top:48px;">
+290:         <article class="faculty-card reveal">
+291:           <div class="photo-ring photo-ring--lg"><div class="photo-ring-inner">👤</div></div>
+292:           <h3>Thangam V</h3>
+293:           <span class="coord-role">Faculty Coordinator</span>
+294:           <span class="coord-dept" style="color:var(--mist-200);">Department of Computer Science and Engineering</span>
+295:           <p class="coord-desc" style="color:var(--mist-200);">"Advisory message placeholder — a short note on guiding CRAFT's direction and priorities."</p>
+296:           <span class="badge-pill badge-pill--dark">Faculty Advisory Board</span>
+297:           <p class="faculty-focus">Guiding focus: Student development, technical learning, academic alignment</p>
+298:         </article>
+299:         <article class="faculty-card reveal">
+300:           <div class="photo-ring photo-ring--lg"><div class="photo-ring-inner">👤</div></div>
+301:           <h3>Sasikala</h3>
+302:           <span class="coord-role">Faculty Co-Coordinator</span>
+303:           <span class="coord-dept" style="color:var(--mist-200);">Department of Computer Science and Engineering</span>
+304:           <p class="coord-desc" style="color:var(--mist-200);">"Advisory message placeholder — a short note on supporting coordinator growth."</p>
+305:           <span class="badge-pill badge-pill--dark">Faculty Advisory Board</span>
+306:           <p class="faculty-focus">Guiding focus: Coordinator development, session quality, academic alignment</p>
+307:         </article>
+308:       </div>
+309:     </div>
+310:   </section>
+311:   <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+312: 
+313: 
+314:   <!-- ============ 03 / LEADERSHIP ============ -->
+315:   <section class="section" id="leadership">
+316:     <div class="wrap">
+317:       <p class="kicker">04 / Leadership</p>
+318:       <h2 class="section-title">The people building CRAFT.</h2>
+319:       <p class="section-lede">
+320:         CRAFT is led by students who turn ideas into workshops, projects, opportunities, and a stronger
+321:         technical community.
+322:       </p>
+323:       <p class="mock-tag" style="margin-top:20px;">Mock data — names and details editable in js/data.js</p>
+324: 
+325:       <div class="grid-6" id="leadershipGrid"></div>
+326:     </div>
+327:   </section>
+328: 
+329:   <!-- ============ CLUB MEMBERS ============ -->
+330:   <section class="section" id="members">
+331:     <div class="wrap">
+332:       <p class="kicker">— Club Members —</p>
+333:       <h2 class="section-title">Who's building with us.</h2>
+334:       <p class="section-lede">Active CRAFT members, department by department. Core membership fills as registrations are reviewed.</p>
+335:       <div class="grid-4" id="membersGrid" style="margin-top:40px;"></div>
+336:       <p class="mock-tag" id="membersEmptyNote" style="margin-top:24px; display:none;">No active members yet — accepted registrations will appear here.</p>
+337:     </div>
+338:   </section>
+339:   <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+340: 
+341: 
+342: 
+343:   <!-- ============ 05 / UPCOMING EVENTS ============ -->
+344:   <section class="section section--dark" id="events">
+345:     <div class="wrap">
+346:       <p class="kicker kicker--light">05 / Upcoming Events</p>
+347:       <h2 class="section-title section-title--light">What we are building next.</h2>
+348:       <p class="mock-tag" style="margin-top:20px; background:rgba(255,255,255,0.08); color:var(--gold-300);">Mock data — for layout preview only</p>
+349: 
+350:       <div class="event-legend reveal">
+351:         <span><span class="legend-dot legend-dot--open"></span> Open</span>
+352:         <span><span class="legend-dot legend-dot--filling"></span> Filling Fast</span>
+353:         <span><span class="legend-dot legend-dot--waitlist"></span> Waitlist</span>
+354:       </div>
+355: 
+356:       <div class="events-layout">
+357:         <article class="event-featured reveal" id="eventFeatured"></article>
+358:         <div class="event-small" id="eventSideList"></div>
+359:       </div>
+360:     </div>
+361:   </section>
+362:   <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+363: 
+364: 
+365: 
+366:   <!-- ============ 06 / PAST EVENTS & IMPACT ============ -->
+367:   <section class="section" id="impact">
+368:     <div class="wrap">
+369:       <p class="kicker">06 / Past Events &amp; Impact</p>
+370:       <h2 class="section-title">Work that left the room.</h2>
+371: 
+372:       <div class="gallery-strip">
+373:         <div class="gallery-placeholder reveal">Workshop photo<br>placeholder</div>
+374:         <div class="gallery-placeholder reveal">Session photo<br>placeholder</div>
+375:         <div class="gallery-placeholder reveal">Demo Day photo<br>placeholder</div>
+376:         <div class="gallery-placeholder reveal">Team photo<br>placeholder</div>
+377:       </div>
+378: 
+379:       <div class="impact-grid">
+380:         <div class="reveal"><span class="impact-num">120</span><span class="impact-label">Students attended</span></div>
+381:         <div class="reveal"><span class="impact-num">34</span><span class="impact-label">Projects deployed</span></div>
+382:         <div class="reveal"><span class="impact-num">9</span><span class="impact-label">Workshops completed</span></div>
+383:         <div class="reveal"><span class="impact-num">28</span><span class="impact-label">Certificates issued</span></div>
+384:       </div>
+385: 
+386:       <ul class="outcome-list">
+387:         <li>12 students deployed their first web app.</li>
+388:         <li>18 students created GitHub-ready project repositories.</li>
+389:       </ul>
+390:       <p class="mock-tag" style="margin-top:20px;">Mock numbers — replace with real figures each semester</p>
+391:     </div>
+392:   </section>
+393:   <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+394: 
+395: 
+396:   <!-- ============ 07 / BUILD OF THE MONTH ============ -->
+397:   <section class="section section--dark" id="build-of-month">
+398:     <div class="wrap">
+399:       <p class="kicker kicker--light">07 / Build of the Month</p>
+400:       <h2 class="section-title section-title--light">One project. Fully shipped.</h2>
+401: 
+402:       <div class="build-feature reveal" id="buildOfMonthSlot" style="background:var(--navy-900); border-color:var(--line-dark);"></div>
+403:     </div>
+404:   </section>
+405:   <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+406: 
+407: 
+408:   <!-- ============ 08 / PROJECT SHOWCASE ============ -->
+409:   <section class="section" id="projects">
+410:     <div class="wrap">
+411:       <p class="kicker">08 / Project Showcase</p>
+412:       <h2 class="section-title">Built here. Ready for the world.</h2>
+413:       <p class="mock-tag" style="margin-top:20px;">Mock projects — for layout preview only</p>
+414: 
+415:       <div class="filter-row filter-row--light" id="projectsFilterRow"></div>
+416:       <div class="grid-4" style="margin-top:32px;" id="projectsGrid"></div>
+417:     </div>
+418:   </section>
+419: 
+420:   <!-- ============ 09 / WORKSHOP RESOURCES ============ -->
+421:   <section class="section" id="resources">
+422:     <div class="wrap">
+423:       <p class="kicker">09 / Workshop Resources</p>
+424:       <h2 class="section-title">Keep building after the session.</h2>
+425: 
+426:       <div class="grid-4" style="margin-top:40px;">
+427:         <div class="resource-card reveal"><div class="resource-icon">▤</div><h3>Session Slides</h3><p>Deck used in the live walkthrough, kept for revision.</p><span class="resource-link">View →</span></div>
+428:         <div class="resource-card reveal"><div class="resource-icon">⌥</div><h3>Starter Repositories</h3><p>The exact repo template each Build-Along starts from.</p><span class="resource-link">View →</span></div>
+429:         <div class="resource-card reveal"><div class="resource-icon">☑</div><h3>Notes &amp; Checklists</h3><p>Step-by-step notes for anyone who joined late or missed a step.</p><span class="resource-link">View →</span></div>
+430:         <div class="resource-card reveal"><div class="resource-icon">▶</div><h3>Recording Links</h3><p>Session recordings for members who couldn't attend live.</p><span class="resource-link">View →</span></div>
+431:         <div class="resource-card reveal"><div class="resource-icon">✦</div><h3>Useful Tools</h3><p>Editors, extensions, and utilities the team actually uses.</p><span class="resource-link">View →</span></div>
+432:         <div class="resource-card reveal"><div class="resource-icon">☁</div><h3>Deployment Guides</h3><p>Short guides for shipping to Vercel, Supabase, and friends.</p><span class="resource-link">View →</span></div>
+433:       </div>
+434:     </div>
+435:   </section>
+436:   <svg class="section-divider section-divider--to-dark" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+437: 
+438: 
+439:   <!-- ============ 10 / TECH RADAR ============ -->
+440:   <section class="section section--dark" id="tech-radar">
+441:     <div class="wrap">
+442:       <p class="kicker kicker--light">10 / Tech Radar</p>
+443:       <h2 class="section-title section-title--light">What is worth watching.</h2>
+444:       <p class="section-lede section-lede--light">
+445:         A curated signal board for technologies, tools, opportunities, and learning paths worth your attention.
+446:       </p>
+447: 
+448:       <div class="radar-feature reveal" id="radarFeature"></div>
+449: 
+450:       <div class="filter-row" id="radarFilterRow"></div>
+451:       <div class="grid-3" style="margin-top:24px;" id="radarItems"></div>
+452: 
+453:       <a href="#" class="view-all-cta view-all-cta--light reveal">Explore Tech Radar →</a>
+454:     </div>
+455:   </section>
+456:   <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+457: 
+458: 
+459:   <!-- ============ 11 / ANNOUNCEMENTS ============ -->
+460:   <section class="section" id="announcements">
+461:     <div class="wrap">
+462:       <p class="kicker">11 / Announcements</p>
+463:       <h2 class="section-title">From the club desk.</h2>
+464:       <p class="section-lede">Important updates, registrations, deadlines, recruitment notices, and campus opportunities.</p>
+465: 
+466:       <div class="announce-feature reveal" id="announceFeature"></div>
+467: 
+468:       <div class="announce-list" id="announceList"></div>
+469: 
+470:       <a href="#" class="view-all-cta reveal">View all announcements →</a>
+471:     </div>
+472:   </section>
+473:   <svg class="section-divider section-divider--to-light" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 C480,46 960,2 1440,30 L1440,48 L0,48 Z"></path></svg>
+474: 
+475: 
+476: 
+477:   <!-- ============ 12 / GALLERY ============ -->
+478:   <section class="section" id="gallery">
+479:     <div class="wrap">
+480:       <p class="kicker">12 / Gallery</p>
+481:       <h2 class="section-title">Proof of work.</h2>
+482: 
+483:       <div class="masonry" id="galleryGrid"></div>
+484:     </div>
+485:   </section>
+486: 
+487:   <!-- ============ 13 / MEMBER NOTES ============ -->
+488:   <section class="section" id="notes">
+489:     <div class="wrap">
+490:       <p class="kicker">13 / Member Notes</p>
+491:       <h2 class="section-title">What members take with them.</h2>
+492: 
+493:       <div class="carousel">
+494:         <div class="carousel-track">
+495:           <div class="carousel-slides" id="testimonialSlides"></div>
+496:         </div>
+497:         <div class="carousel-controls">
+498:           <button class="carousel-arrow" data-carousel-prev aria-label="Previous testimonial">←</button>
+499:           <div class="carousel-dots" id="testimonialDots"></div>
+500:           <button class="carousel-arrow" data-carousel-next aria-label="Next testimonial">→</button>
+501:         </div>
+502:       </div>
+503:     </div>
+504:   </section>
+505: 
+506:   <!-- ============ 14 / FAQ ============ -->
+507:   <section class="section" id="faq">
+508:     <div class="wrap">
+509:       <p class="kicker">14 / FAQ</p>
+510:       <h2 class="section-title">Before you join.</h2>
+511: 
+512:       <div class="faq-list">
+513:         <div class="faq-item">
+514:           <button class="faq-question">Can any student join CRAFT? <span class="faq-icon">+</span></button>
+515:           <div class="faq-answer"><p>Yes. CRAFT is open to students from CSE A, CSE B, CSE C, AI &amp; DS, and ECE at Amrita Vishwa Vidyapeetham, Nagercoil Campus. Students do not need prior experience in AI, web development, or advanced programming to apply as regular members. Curiosity, consistency, and willingness to build matter most.</p></div>
+516:         </div>
+517:         <div class="faq-item">
+518:           <button class="faq-question">Is prior coding experience required? <span class="faq-icon">+</span></button>
+519:           <div class="faq-answer"><p>No. Sessions are designed so first-time builders and experienced coders can both contribute.</p></div>
+520:         </div>
+521:         <div class="faq-item">
+522:           <button class="faq-question">How are members selected? <span class="faq-icon">+</span></button>
+523:           <div class="faq-answer"><p>Registrations are reviewed by the CRAFT team on a first-come basis until the 100-seat cap is reached.</p></div>
+524:         </div>
+525:         <div class="faq-item">
+526:           <button class="faq-question">How do workshops work? <span class="faq-icon">+</span></button>
+527:           <div class="faq-answer"><p>Every session follows the 15-60-15 method: a short brief, a hands-on build, then a test-and-share close.</p></div>
+528:         </div>
+529:         <div class="faq-item">
+530:           <button class="faq-question">Will certificates be provided? <span class="faq-icon">+</span></button>
+531:           <div class="faq-answer"><p>Participation certificates are issued for completed workshop series — details are shared each semester.</p></div>
+532:         </div>
+533:         <div class="faq-item">
+534:           <button class="faq-question">Can I join as a student coordinator? <span class="faq-icon">+</span></button>
+535:           <div class="faq-answer"><p>Yes — coordinator applicants should already have at least one completed project to show.</p></div>
+536:         </div>
+537:         <div class="faq-item">
+538:           <button class="faq-question">What happens after 100 core member seats are filled? <span class="faq-icon">+</span></button>
+539:           <div class="faq-answer"><p>New registrations join the Waiting List and are promoted automatically as seats open up.</p></div>
+540:         </div>
+541:         <div class="faq-item">
+542:           <button class="faq-question">Can I attend events without becoming a core member? <span class="faq-icon">+</span></button>
+543:           <div class="faq-answer"><p>Yes — most workshops and events are open to interested students even before a core seat opens up. Core membership just guarantees a guaranteed seat and closer coordinator support.</p></div>
+544:         </div>
+545:       </div>
+546:     </div>
+547:   </section>
+548: 
+549:   <!-- ============ STATS ============ -->
+550:   <section class="stats">
+551:     <div class="wrap stats-grid">
+552:       <div class="stat"><span class="stat-num" id="statActiveCap">50</span><span class="stat-label">Active member cap</span></div>
+553:       <div class="stat"><span class="stat-num" id="statSessionMinutes">90</span><span class="stat-label">Minutes per session</span></div>
+554:       <div class="stat"><span class="stat-num" id="statDeployRatio">1:1</span><span class="stat-label">Live-deploy ratio</span></div>
+555:       <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Ongoing Build-Alongs</span></div>
+556:     </div>
+557:   </section>
+558: 
+559:   <!-- ============ 15 / JOIN ============ -->
+560:   <section class="section" id="join">
+561:     <div class="wrap join-grid">
+562:       <div class="join-copy">
+563:         <p class="kicker">15 / Join</p>
+564:         <h2 class="section-title">A hundred seats. First come, first built.</h2>
+565:         <p class="section-lede">
+566:           Registrations are reviewed by the CRAFT team. Once 50 core seats fill, every new entry joins the
+567:           Waiting List and is promoted the moment a seat opens.
+568:         </p>
+569:         <p class="mock-tag" id="joinSeatsRemaining" style="margin-top:14px;"></p>
+570:         <ul class="join-list">
+571:           <li>Core membership is limited to 100 students</li>
+572:           <li>Registrations are reviewed by the CRAFT leadership team</li>
+573:           <li>Students can join a waiting list after seats are full</li>
+574:           <li>No prior AI or web experience is required for members</li>
+575:           <li>Eligible applicants may be contacted for a short interaction or orientation</li>
+576:           <li>Coordinator applicants should already have at least one completed project</li>
+577:           <li>Coordinator recruitment WhatsApp: <strong>9390093424</strong></li>
+578:         </ul>
+579:       </div>
+580: 
+581:       <form class="join-form" id="joinForm" novalidate>
+582:         <div class="form-row">
+583:           <label for="fname">Full name</label>
+584:           <input type="text" id="fname" name="fname" required autocomplete="name">
+585:         </div>
+586:         <div class="form-row">
+587:           <label for="froll">Roll number</label>
+588:           <input type="text" id="froll" name="froll" placeholder="NC.SC.U4CSE25XXX" required>
+589:         </div>
+590:         <div class="form-row">
+591:           <label for="femail">College email</label>
+592:           <input type="email" id="femail" name="femail" required autocomplete="email">
+593:         </div>
+594:         <div class="form-row">
+595:           <label for="fdob">Date of birth</label>
+596:           <input type="date" id="fdob" name="fdob" required autocomplete="bday">
+597:           <span class="form-row-hint">This becomes your login password (as DD-MM-YYYY) — keep it handy.</span>
+598:         </div>
+599:         <div class="form-row">
+600:           <label for="fyear">Year of study</label>
+601:           <select id="fyear" name="fyear" required>
+602:             <option value="" disabled selected>Select year</option>
+603:             <option>1st Year</option>
+604:             <option>2nd Year</option>
+605:             <option>3rd Year</option>
+606:             <option>4th Year</option>
+607:           </select>
+608:         </div>
+609:         <div class="form-row">
+610:           <label for="fdept">Department / Class</label>
+611:           <select id="fdept" name="fdept" required>
+612:             <option value="" disabled selected>Select department / class</option>
+613:             <option>CSE A</option>
+614:             <option>CSE B</option>
+615:             <option>CSE C</option>
+616:             <option>AI &amp; DS</option>
+617:             <option>ECE</option>
+618:           </select>
+619:         </div>
+620:         <div class="form-row">
+621:           <label for="finterest">Area of interest</label>
+622:           <select id="finterest" name="finterest" required>
+623:             <option value="" disabled selected>Select area of interest</option>
+624:             <option>AI &amp; AI Agents</option>
+625:             <option>Web Development</option>
+626:             <option>UI/UX</option>
+627:             <option>Automation</option>
+628:             <option>Cloud &amp; Deployment</option>
+629:             <option>Hackathons</option>
+630:             <option>Unsure, exploring</option>
+631:           </select>
+632:         </div>
+633:         <div class="form-row">
+634:           <label for="fprofile">GitHub or LinkedIn profile <span style="font-weight:400; color:var(--ink-700);">(optional)</span></label>
+635:           <input type="url" id="fprofile" name="fprofile" placeholder="https://github.com/yourhandle">
+636:         </div>
+637:         <div class="form-row">
+638:           <label for="fphoto">Photo <span style="font-weight:400; color:var(--ink-700);">(optional — shown on your ID card)</span></label>
+639:           <div class="photo-upload-row">
+640:             <div class="photo-upload-preview" id="fphotoPreview">👤</div>
+641:             <input type="file" id="fphoto" name="fphoto" accept="image/*">
+642:           </div>
+643:         </div>
+644:         <div class="form-row form-row--checkbox">
+645:           <label class="checkbox-label">
+646:             <input type="checkbox" id="fagree" name="fagree" required>
+647:             <span>I agree to attend CRAFT sessions responsibly and follow club guidelines.</span>
+648:           </label>
+649:         </div>
+650:         <button type="submit" class="btn btn-primary btn-block">Submit registration</button>
+651:         <p class="form-helper">
+652:           Your registration will be reviewed by the CRAFT leadership team. Core membership is limited to 100
+653:           students. Eligible applicants may be contacted for a short interaction or orientation.
+654:         </p>
+655:         <p class="form-helper form-helper--note">
+656:           For student coordinator roles, applicants should already have at least one completed technical
+657:           project. Contact <strong>9390093424</strong> on WhatsApp for coordinator recruitment.
+658:         </p>
+659:         <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+660:       </form>
+661:       <div id="idCardContainer" class="id-card-container"></div>
+662:     </div>
+663:   </section>
+664: 
+665: </main>
+666: 
+667: <!-- ============ FOOTER ============ -->
+668: <footer class="site-footer">
+669:   <div class="wrap footer-grid">
+670:     <div>
+671:       <a class="brand brand--footer" href="#top"><span class="brand-mark">&gt;_</span> CRAFT</a>
+672:       <p>Council for Real-world Applications &amp; Future Tech<br>Dept. of Computer Science &amp; Engineering<br>Amrita Vishwa Vidyapeetham, Nagercoil Campus</p>
+673:     </div>
+674:     <div>
+675:       <h4>Faculty Advisory Board</h4>
+676:       <p>Mrs. Thangam V — Faculty Coordinator<br>Dr./Mrs. Sasikala — Faculty Co-Coordinator</p>
+677:     </div>
+678:     <div>
+679:       <h4>Founder &amp; Club Lead</h4>
+680:       <p>Kalakonda Akshay<br>NC.SC.U4CSE25049</p>
+681:     </div>
+682:     <div>
+683:       <h4>Elsewhere</h4>
+684:       <p>
+685:         <a href="#">Instagram</a><br>
+686:         <a href="#">LinkedIn</a><br>
+687:         <a href="https://wa.me/919390093424" target="_blank" rel="noopener">WhatsApp: 9390093424</a><br>
+688:         <a href="mailto:craft.cse@example.edu">craft.cse@example.edu</a>
+689:       </p>
+690:     </div>
+691:   </div>
+692:   <div class="wrap footer-bottom">
+693:     <span>© <span id="year"></span> CRAFT · Amrita Vishwa Vidyapeetham, Nagercoil Campus</span>
+694:     <span>Governed by the CRAFT Club Constitution</span>
+695:     <a href="admin.html" class="footer-admin-link">Coordinator Admin →</a>
+696:   </div>
+697: </footer>
+698: 
+699: <script src="js/data.js"></script>
+700: <script src="js/registrations.js"></script>
+701: <script src="js/content-store.js"></script>
+702: <script src="js/render.js"></script>
+703: <script src="js/main.js"></script>
+704: </body>
+705: </html>
+706: 
+The above content shows the entire, complete file contents of the requested file.
