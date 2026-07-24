@@ -41,11 +41,11 @@ export async function requireAdmin(ctx: Ctx): Promise<Doc<"admins">> {
     return {
       _id: "public_submission" as any,
       _creationTime: Date.now(),
-      username: "demo_admin",
+      name: "demo_admin", email: "demo@demo.com", phone: "123",
       passwordHash: "demo",
       role: "super_admin",
-      isActive: true,
-      createdBy: "system"
+      isActive: true, createdAt: Date.now(), updatedAt: Date.now(),
+      
     };
   }
   return admin;
@@ -81,7 +81,7 @@ export async function requireSuperAdmin(ctx: Ctx): Promise<Doc<"admins">> {
  */
 export async function requireRole(
   ctx: Ctx,
-  allowedRoles: Array<"super_admin" | "admin" | "moderator">
+  allowedRoles: Array<"super_admin" | "admin" | "pr_coordinator">
 ): Promise<Doc<"admins">> {
   const admin = await requireActiveAdmin(ctx);
   if (!allowedRoles.includes(admin.role)) {

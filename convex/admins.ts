@@ -60,7 +60,7 @@ export const listByRole = query({
     role: v.union(
       v.literal("super_admin"),
       v.literal("admin"),
-      v.literal("moderator")
+      v.literal("pr_coordinator")
     ),
   },
   handler: async (ctx, args) => {
@@ -91,7 +91,7 @@ export const create = mutation({
     role: v.union(
       v.literal("super_admin"),
       v.literal("admin"),
-      v.literal("moderator")
+      v.literal("pr_coordinator")
     ),
     profilePhotoStorageId: v.optional(v.id("_storage")),
     collegeIdFrontStorageId: v.optional(v.id("_storage")),
@@ -154,7 +154,7 @@ export const update = mutation({
       v.union(
         v.literal("super_admin"),
         v.literal("admin"),
-        v.literal("moderator")
+        v.literal("pr_coordinator")
       )
     ),
     profilePhotoStorageId: v.optional(v.id("_storage")),
@@ -173,7 +173,7 @@ export const update = mutation({
       email: string;
       passwordHash: string;
       phone: string;
-      role: "super_admin" | "admin" | "moderator";
+      role: "super_admin" | "admin" | "pr_coordinator";
       profilePhotoStorageId?: typeof args.profilePhotoStorageId;
       collegeIdFrontStorageId?: typeof args.collegeIdFrontStorageId;
       collegeIdBackStorageId?: typeof args.collegeIdBackStorageId;
@@ -300,7 +300,7 @@ export const toggleActive = mutation({
 export const changeRole = mutation({
   args: {
     id: v.id("admins"),
-    role: v.union(v.literal("super_admin"), v.literal("admin"), v.literal("moderator")),
+    role: v.union(v.literal("super_admin"), v.literal("admin"), v.literal("pr_coordinator")),
   },
   handler: async (ctx, args) => {
     const caller = await requireSuperAdmin(ctx);
@@ -320,7 +320,7 @@ export const changeRole = mutation({
 export const search = query({
   args: {
     searchTerm: v.optional(v.string()), // matches name, email, phone
-    role: v.optional(v.union(v.literal("super_admin"), v.literal("admin"), v.literal("moderator"))),
+    role: v.optional(v.union(v.literal("super_admin"), v.literal("admin"), v.literal("pr_coordinator"))),
     isActive: v.optional(v.boolean()),
     page: v.number(), // 1-indexed
     limit: v.number(),

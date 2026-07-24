@@ -97,7 +97,7 @@ export const sendBulkEmail = mutation({
       }
     }
 
-    const recipientEmails = members.map(m => m.personalEmail);
+    const recipientEmails = members.map(m => m.personalEmail || m.collegeEmail).filter((e): e is string => !!e);
     
     if (recipientEmails.length === 0) {
       throw new Error("No active recipients found for the selected criteria.");
@@ -176,7 +176,7 @@ export const sendEventReminder = mutation({
         .filter((q) => q.eq(q.field("status"), "active"))
         .collect();
       recipientEmails = members
-        .map((m) => m.personalEmail || m.collegeEmail || m.email)
+        .map((m) => m.personalEmail || m.collegeEmail)
         .filter((e): e is string => !!e);
     }
 

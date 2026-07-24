@@ -17,7 +17,7 @@ export const seedTemplates = mutation({
     try {
       // Create a dummy admin ID if none exists for seeding
       const admin = await ctx.db.query("admins").first();
-      const adminId = admin ? admin._id : (await ctx.db.insert("admins", { username: "system", passwordHash: "system", role: "Super Admin", createdBy: "system" }));
+      const adminId = admin ? admin._id : (await ctx.db.insert("admins", { name: "system", email: "system@craft.club", phone: "000", passwordHash: "system", role: "super_admin", isActive: true, createdAt: Date.now(), updatedAt: Date.now() }));
 
       const templatesToSeed = [
         {

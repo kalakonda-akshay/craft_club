@@ -270,7 +270,7 @@ export const waitlist = mutation({
     if (!request) throw new Error("Join request not found.");
 
     await ctx.db.patch(args.id, {
-      status: "Waitlisted",
+      status: "Pending",
       reviewedAt: now(),
     });
     
