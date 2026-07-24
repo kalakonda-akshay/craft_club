@@ -322,4 +322,15 @@ export default defineSchema({
     primaryColor: v.optional(v.string()),
     emailFooter: v.optional(v.string()),
   }),
+
+  // ============================================================
+  // COLLECTION 14: GALLERY IMAGES
+  // ============================================================
+  galleryImages: defineTable({
+    label: v.string(),
+    imageStorageId: v.id("_storage"),
+    height: v.number(),
+    uploadedAt: v.number(),
+    uploadedBy: v.id("admins"),
+  }).index("by_uploadedAt", ["uploadedAt"]),
 });

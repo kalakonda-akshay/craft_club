@@ -345,19 +345,35 @@ function observeReveals(root) {
   observeReveals(listEl);
 })();
 
-/* ---------------------------------------------------------
-   Gallery masonry
---------------------------------------------------------- */
-(function () {
-  const grid = document.getElementById("galleryGrid");
-  if (!grid) return;
-  const gallery = (typeof CraftContent !== "undefined") ? CraftContent.getGallery() : (typeof CRAFT_GALLERY !== "undefined" ? CRAFT_GALLERY : []);
-  grid.innerHTML = gallery.map(g => {
-    const bg = g.image ? `background-image:url('${g.image}'); background-size:cover; background-position:center; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,0.6);` : "";
-    return `<div class="masonry-item reveal" style="height:${g.height}px; ${bg}">${g.label}</div>`;
-  }).join("");
-  observeReveals(grid);
-})();
+  /* ---------------------------------------------------------
+     Gallery masonry
+  --------------------------------------------------------- */
+  (async function () {
+    const grid = document.getElementById("galleryGrid");
+    if (!grid) return;
+    
+    let gallery = [];
+    try {
+      if (window.convexClient) {
+        gallery = await window.convexClient.query("gallery:listPhotos");
+      }
+    } catch (e) {
+      console.warn("Failed to load gallery from Convex:", e);
+    }
+
+    // Fallback to dummy data if database is empty
+    if (!gallery || gallery.length === 0) {
+      gallery = (typeof CRAFT_GALLERY !== "undefined" ? CRAFT_GALLERY : []);
+    }
+
+    grid.innerHTML = gallery.map(g => {
+      // Handle both dynamic CMS (imageUrl) and static fallback (image)
+      const imgSrc = g.imageUrl || g.image;
+      const bg = imgSrc ? `background-image:url('${imgSrc}'); background-size:cover; background-position:center; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,0.6);` : "";
+      return `<div class="masonry-item reveal" style="height:${g.height}px; ${bg}">${g.label}</div>`;
+    }).join("");
+    observeReveals(grid);
+  })();
 
 /* ---------------------------------------------------------
    Build of the Month

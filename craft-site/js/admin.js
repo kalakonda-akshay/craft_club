@@ -872,3 +872,107 @@
     }
     
   })();
+
+  // ==========================================
+  // GALLERY MANAGEMENT
+  // ==========================================
+  (async function initGalleryAdmin() {
+    if (!window.convexClient) return;
+
+    const form = document.getElementById('galleryUploadForm');
+    const fileInput = document.getElementById('galleryFileInput');
+    const labelInput = document.getElementById('galleryLabelInput');
+    const heightInput = document.getElementById('galleryHeightInput');
+    const status = document.getElementById('galleryStatus');
+    const list = document.getElementById('galleryAdminList');
+
+    if (!form || !list) return;
+
+    async function loadGallery() {
+      try {
+        const photos = await window.convexClient.query('gallery:listPhotos');
+        if (!photos || photos.length === 0) {
+          list.innerHTML = '<p style="color: var(--ink-700); font-size: 14px;">No photos uploaded yet.</p>';
+          return;
+        }
+
+        list.innerHTML = photos.map(p => \
+          <div style="position: relative; border-radius: 6px; overflow: hidden; background: #000;">
+            <img src="\" alt="\" style="width: 100%; height: 120px; object-fit: cover; opacity: 0.8;">
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 5px; background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+              <span>\</span>
+              <button class="gallery-del-btn" data-id="\" style="background: #C0524A; color: white; border: none; border-radius: 3px; cursor: pointer; padding: 2px 5px;">Del</button>
+            </div>
+          </div>
+        \).join('');
+
+        // Attach delete handlers
+        document.querySelectorAll('.gallery-del-btn').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const id = e.target.getAttribute('data-id');
+            if (confirm('Delete this photo?')) {
+              try {
+                await window.convexClient.mutation('gallery:deletePhoto', { id });
+                loadGallery();
+              } catch (err) {
+                alert('Failed to delete photo: ' + err.message);
+              }
+            }
+          });
+        });
+      } catch (err) {
+        list.innerHTML = \<p style="color:red;">Error: \</p>\;
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const label = labelInput.value.trim();
+      const height = parseInt(heightInput.value.trim()) || 200;
+
+      const submitBtn = document.getElementById('galleryUploadBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Uploading...';
+      status.textContent = '';
+
+      try {
+        // 1. Get upload URL
+        const uploadUrl = await window.convexClient.mutation('simpleCertificates:generateUploadUrl');
+        
+        // 2. Upload file
+        const res = await fetch(uploadUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': file.type },
+          body: file
+        });
+        
+        if (!res.ok) throw new Error('Failed to upload file to storage');
+        const { storageId } = await res.json();
+
+        // 3. Save to database
+        await window.convexClient.mutation('gallery:addPhoto', {
+          label,
+          imageStorageId: storageId,
+          height
+        });
+
+        status.textContent = 'Photo uploaded successfully!';
+        status.style.color = 'var(--gold-500)';
+        form.reset();
+        loadGallery();
+      } catch (err) {
+        status.textContent = 'Error: ' + err.message;
+        status.style.color = '#C0524A';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Upload Photo';
+      }
+    });
+
+    // Wait a tick for convex client to authenticate, then load
+    setTimeout(loadGallery, 500);
+  })();
+
