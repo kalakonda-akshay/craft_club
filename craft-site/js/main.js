@@ -142,6 +142,7 @@
               year: joinForm.fyear.value,
               section: joinForm.fsection ? joinForm.fsection.value.trim() : "A",
               collegeEmail: joinForm.femail.value.trim(),
+              personalEmail: joinForm.femail.value.trim(),
               phone: joinForm.fphone ? joinForm.fphone.value.trim() : "0000000000",
               reasonToJoin: (joinForm.fprofile && joinForm.fprofile.value.trim()) ? joinForm.fprofile.value.trim() : "I want to join CRAFT."
            });
