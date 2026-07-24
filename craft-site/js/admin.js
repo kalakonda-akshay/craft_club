@@ -896,15 +896,15 @@
           return;
         }
 
-        list.innerHTML = photos.map(p => \
+        list.innerHTML = photos.map(p => `
           <div style="position: relative; border-radius: 6px; overflow: hidden; background: #000;">
-            <img src="\" alt="\" style="width: 100%; height: 120px; object-fit: cover; opacity: 0.8;">
+            <img src="${p.imageUrl}" alt="${p.label}" style="width: 100%; height: 120px; object-fit: cover; opacity: 0.8;">
             <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 5px; background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
-              <span>\</span>
-              <button class="gallery-del-btn" data-id="\" style="background: #C0524A; color: white; border: none; border-radius: 3px; cursor: pointer; padding: 2px 5px;">Del</button>
+              <span>${p.label}</span>
+              <button class="gallery-del-btn" data-id="${p._id}" style="background: #C0524A; color: white; border: none; border-radius: 3px; cursor: pointer; padding: 2px 5px;">Del</button>
             </div>
           </div>
-        \).join('');
+        `).join('');
 
         // Attach delete handlers
         document.querySelectorAll('.gallery-del-btn').forEach(btn => {
@@ -921,7 +921,7 @@
           });
         });
       } catch (err) {
-        list.innerHTML = \<p style="color:red;">Error: \</p>\;
+        list.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
       }
     }
 
