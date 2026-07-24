@@ -26,7 +26,7 @@ const CraftRegistrations = (function () {
           dept: r.department,
           year: r.year,
           interest: r.reasonToJoin,
-          status: r.status.toLowerCase(),
+          status: r.status === "Approved" ? "accepted" : r.status === "Waitlisted" ? "waitlist" : r.status.toLowerCase(),
           submittedAt: new Date(r.submittedAt).toISOString(),
           attendance: [],
           sessionsAttended: 0
@@ -84,7 +84,8 @@ const CraftRegistrations = (function () {
           section: record.section || "A",
         });
       } catch (err) {
-        console.error("Failed to submit to Convex:", err);
+        alert("Server Error: " + err.message);
+        throw err;
       }
     }
 
@@ -95,14 +96,19 @@ const CraftRegistrations = (function () {
 
   async function updateStatus(id, status) {
     if (window.convexClient) {
-      if (status === "accepted") {
-        await window.convexClient.mutation("joinRequests:approve", { id });
-      } else if (status === "rejected") {
-        await window.convexClient.mutation("joinRequests:reject", { id });
-      } else if (status === "waitlist") {
-        await window.convexClient.mutation("joinRequests:waitlist", { id });
+      try {
+        if (status === "accepted") {
+          await window.convexClient.mutation("joinRequests:approve", { id });
+        } else if (status === "rejected") {
+          await window.convexClient.mutation("joinRequests:reject", { id });
+        } else if (status === "waitlist") {
+          await window.convexClient.mutation("joinRequests:waitlist", { id });
+        }
+        await syncWithConvex();
+      } catch (err) {
+        alert("Server Error: " + err.message);
+        throw err;
       }
-      await syncWithConvex();
     } else {
       const list = readAll();
       const idx = list.findIndex(r => r.id === id);

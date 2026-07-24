@@ -689,7 +689,21 @@ body.reduced-motion .reduced-only{ display:inline; }
 @media (max-width:640px){ .process-flow{ padding-left:48px; } .process-line{ left:16px; } .process-num{ font-size:36px; } }
 
 /* ---- Leadership cards (extends .student-card) ---- */
-.lead-card{ text-align:center; padding-bottom:26px; }
+.lead-card{ text-align:left; padding-bottom:26px; }
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(4, 22, 46, 0.05);
+}
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 16px 48px rgba(4, 22, 46, 0.08);
+}
+.lead-header { display:flex; align-items:center; gap:16px; margin-bottom:12px; }
+.lead-photo { width:100%; height:100%; border-radius:50%; object-fit:cover; }
+.lead-title-group { display:flex; flex-direction:column; align-items:flex-start; text-align:left; }
 .lead-intro{ font-size:13px; color:var(--ink-700); line-height:1.55; margin-top:12px; }
 .lead-focus{ font-size:12px; color:var(--navy-600); margin-top:10px; }
 .lead-tags{ justify-content:center; margin-top:12px; }

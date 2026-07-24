@@ -13,6 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230B1A2C'/%3E%3Cpath d='M30 32 L18 50 L30 68' stroke='%23C99A2E' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M70 32 L82 50 L70 68' stroke='%23FFFFFF' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='46' y='58' width='9' height='9' rx='2' fill='%23C99A2E'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body class="admin-body">
 
@@ -58,6 +59,8 @@
       <input type="search" id="adminSearch" class="admin-search" placeholder="Search name, roll number, or email…">
       <div class="admin-toolbar-actions">
         <button class="btn btn-outline" id="startScannerBtn" type="button">📸 QR Check-in</button>
+        <button class="btn btn-outline" id="certificatesBtn" type="button">🎓 Send Certificates</button>
+        <button class="btn btn-outline" id="sendReminderBtn" type="button">📧 Event Reminder</button>
         <button class="btn btn-outline" id="seedBtn" type="button">Load sample data</button>
         <button class="btn btn-outline" id="exportBtn" type="button">Export CSV</button>
         <button class="btn btn-ghost" id="clearBtn" type="button" style="color:#C0524A; border-color:#C0524A;">Clear all</button>
@@ -84,7 +87,58 @@
           </select>
         </div>
         <div id="qrReader" style="width: 100%; min-height: 300px; border: 1px solid var(--border); border-radius: 8px;"></div>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);">
+          <label style="font-size: 13px; margin-bottom: 8px; display: block;">Manual Check-in (if camera fails)</label>
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="manualCheckinId" class="form-control" placeholder="Enter Member ID" style="flex: 1;">
+            <button class="btn btn-primary" id="manualCheckinBtn" type="button">Check-in</button>
+          </div>
+        </div>
         <p id="qrStatus" style="margin-top: 15px; font-weight: 500; text-align: center; color: var(--accent);"></p>
+      </div>
+    </div>
+
+    <!-- Certificates Modal -->
+    <div id="certModal" class="idcard-modal-overlay" hidden style="z-index: 1000; display: none; align-items: center; justify-content: center;">
+      <div class="idcard-modal" style="width: 100%; max-width: 600px; padding: 20px; max-height: 90vh; overflow-y: auto;">
+        <div class="idcard-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 style="margin: 0;">Generate Certificates</h2>
+          <button class="btn btn-ghost" id="closeCertBtn" style="font-size: 20px; padding: 5px 10px;">&times;</button>
+        </div>
+        <p style="margin-bottom: 20px; font-size: 14px; color: var(--ink-700);">Tick the checkboxes for the members who attended. They will immediately receive an email with their printable digital certificate.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+        <div class="form-group">
+          <label>Workshop Title</label>
+          <input type="text" id="certEventName" placeholder="e.g. AI Agents & Automation" class="input">
+        </div>
+        <div class="form-group">
+          <label>Event Date</label>
+          <input type="text" id="certEventDate" placeholder="e.g. 24 July 2026" class="input">
+        </div>
+        <div class="form-group">
+          <label>Certificate ID Prefix</label>
+          <input type="text" id="certPrefix" value="CRAFT-2026" class="input">
+        </div>
+        <div class="form-group">
+          <label>Club Lead Name</label>
+          <input type="text" id="certLead" value="Kalakonda Akshay" class="input">
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+          <label>Faculty Coordinator Name</label>
+          <input type="text" id="certFaculty" value="Mrs. Thangam V" class="input">
+        </div>
+      </div>
+        
+        <h3 style="margin: 20px 0 10px; font-size: 16px;">Select Attendees</h3>
+        <div style="border: 1px solid var(--border); border-radius: 6px; padding: 10px; max-height: 300px; overflow-y: auto; background: var(--bg);" id="certMembersList">
+          <!-- Member checkboxes will be rendered here -->
+          <p style="padding: 10px; color: #777;">Loading members...</p>
+        </div>
+        
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+          <p id="certStatus" style="font-weight: 500; color: var(--accent); margin: 0;"></p>
+          <button class="btn btn-primary" id="sendCertificatesSubmitBtn" type="button">Send Certificates</button>
+        </div>
       </div>
     </div>
 
@@ -118,11 +172,12 @@
   </main>
 </div>
 
-<script src="js/convex-bundle.js"></script>
-<script src="js/registrations.js"></script>
-<script src="js/data.js"></script>
-<script src="js/content-store.js"></script>
-<script src="js/admin.js"></script>
-<script src="https://unpkg.com/convex@1.17.0/browser.bundle.js"></script>
+<script src="js/convex-bundle.js?v=8"></script>
+<script src="js/registrations.js?v=8"></script>
+<script src="js/data.js?v=8"></script>
+<script src="js/content-store.js?v=8"></script>
+<script src="js/admin.js?v=8"></script>
+<script src="https://unpkg.com/convex@1.17.0/browser.bundle.js?v=8"></script>
+<iframe id="certGeneratorFrame" src="certificate.html" style="width:1056px; height:816px; position:absolute; left:-9999px; opacity:0; pointer-events:none;"></iframe>
 </body>
 </html>

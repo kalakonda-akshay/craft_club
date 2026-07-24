@@ -14,7 +14,18 @@ export default mutation({
       updatedAt: Date.now(),
     });
 
+    const admin2Id = await ctx.db.insert("admins", {
+      name: "AVINASH",
+      email: "avinash@example.com",
+      phone: "0000000000",
+      passwordHash: "AVI1464",
+      role: "admin",
+      isActive: true,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
     // Removed fake data for events, newsletters, etc. to prevent schema validation crashes.
-    console.log("Seed complete: AKSHAY admin created successfully.");
+    console.log("Seed complete: AKSHAY & AVINASH admins created successfully.");
   },
 });

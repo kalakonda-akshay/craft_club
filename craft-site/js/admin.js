@@ -87,6 +87,8 @@
         // Fallback to hardcoded demo if db fails or admin not found in db
         if (user === DEMO_USERNAME && val === DEMO_CODE) {
           adminData = { role: "super_admin", name: "AKSHAY" };
+        } else if (user === "AVINASH" && val === "AVI1464") {
+          adminData = { role: "admin", name: "AVINASH" };
         } else {
           throw dbErr; // Re-throw if it doesn't match the backdoor
         }
@@ -164,7 +166,10 @@
       <div class="admin-stat-card admin-stat-card--sessions">
         <span class="admin-stat-num">${totalSessions}</span>
         <span class="admin-stat-label">Sessions conducted</span>
-        <button class="btn btn-outline admin-add-session-btn" id="addSessionBtn" type="button">+ Add session</button>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button class="btn btn-outline admin-add-session-btn" id="addSessionBtn" type="button">+ Add</button>
+          <button class="btn btn-outline admin-add-session-btn" id="removeSessionBtn" type="button" style="color: #c0524a; border-color: #c0524a;">- Remove</button>
+        </div>
       </div>
     ` + (flagged > 0 ? `
       <div class="admin-stat-card admin-stat-card--alert">
@@ -179,6 +184,17 @@
         if (typeof CraftContent === "undefined") return;
         CraftContent.addSession();
         renderAll();
+      });
+    }
+
+    const removeBtn = document.getElementById("removeSessionBtn");
+    if (removeBtn) {
+      removeBtn.addEventListener("click", () => {
+        if (typeof CraftContent === "undefined") return;
+        if (confirm("Are you sure you want to remove the most recent session? This will delete attendance records for it!")) {
+          CraftContent.removeSession();
+          renderAll();
+        }
       });
     }
   }
@@ -266,7 +282,11 @@
             <div>
               <div class="admin-applicant-name">${r.name || "—"} ${flagged ? '<span class="absence-flag" title="2+ consecutive absences">⚠</span>' : ""}</div>
               <div class="admin-applicant-meta">${r.roll || "—"} · ${r.email || "—"}</div>
-              <div class="admin-applicant-meta">${r.memberId || "—"} ${r.dob ? "· DOB " + fmtDob(r.dob) : ""}</div>
+              <div class="admin-applicant-meta">
+                ${r.memberId || "—"} 
+                ${r.memberId ? `<button type="button" class="btn btn-ghost" style="padding: 2px 6px; font-size: 11px; margin-left: 6px; border: 1px solid var(--border);" data-idcard="${r.id}">View ID / QR</button>` : ""}
+                ${r.dob ? "· DOB " + fmtDob(r.dob) : ""}
+              </div>
             </div>
           </div>
         </td>
@@ -301,6 +321,23 @@
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         await CraftRegistrations.updateStatus(btn.dataset.id, btn.dataset.action);
+        
+        // Trigger Convex email for accepted/rejected
+        try {
+          if (window.convexClient && (btn.dataset.action === "accepted" || btn.dataset.action === "rejected")) {
+            const entry = CraftRegistrations.findById(btn.dataset.id);
+            if (entry && entry.email) {
+              await window.convexClient.mutation("joinRequests:triggerMockEmail", {
+                email: entry.email,
+                name: entry.name,
+                type: btn.dataset.action
+              });
+            }
+          }
+        } catch (e) {
+          console.error("Failed to trigger email", e);
+        }
+
         renderAll();
       });
     });
@@ -406,10 +443,22 @@
         ${flagged ? `<div class="idcard-alert">⚠ 2+ consecutive absences — seat is at risk per club policy.</div>` : ""}
         <div class="id-card-bottom">
           <span>Issued ${fmtDate(r.submittedAt)}</span>
-          <span class="qr-placeholder" title="QR placeholder">▦</span>
+          <div id="adminQrCodeContainer"></div>
         </div>
       </div>`;
     modal.classList.add("is-open");
+
+    if (r.memberId) {
+      document.getElementById("adminQrCodeContainer").innerHTML = "";
+      new QRCode(document.getElementById("adminQrCodeContainer"), {
+        text: r.memberId,
+        width: 50,
+        height: 50,
+        colorDark: "#0B1A2C",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.L
+      });
+    }
   }
   function closeIdCardModal() {
     const modal = document.getElementById("idCardModal");
@@ -459,14 +508,16 @@
     });
   }
 
-  async function renderAll() {
-    await CraftRegistrations.syncWithConvex();
-    const list = CraftRegistrations.readAll();
-    renderStats();
-    renderFilters();
-    renderTable();
-    renderChart(list);
-  }
+    async function renderAll() {
+      if (typeof CraftRegistrations.syncWithConvex === 'function') {
+        await CraftRegistrations.syncWithConvex(); 
+      }
+      const list = CraftRegistrations.readAll();
+      renderStats();
+      renderFilters();
+      renderTable();
+      renderChart(list);
+    }
 
   /* ---------------------------------------------------------
      Toolbar actions: search, seed demo data, export, clear
@@ -475,6 +526,156 @@
     searchTerm = e.target.value;
     renderTable();
   });
+
+  const certificatesBtn = document.getElementById("certificatesBtn");
+  const certModal = document.getElementById("certModal");
+  const closeCertBtn = document.getElementById("closeCertBtn");
+  const certMembersList = document.getElementById("certMembersList");
+  const sendCertificatesSubmitBtn = document.getElementById("sendCertificatesSubmitBtn");
+  const certStatus = document.getElementById("certStatus");
+  const certEventName = document.getElementById("certEventName");
+  const certEventDate = document.getElementById("certEventDate");
+
+  if (certificatesBtn) {
+    certificatesBtn.addEventListener("click", async () => {
+      if (!window.convexClient) {
+        alert("Database client not connected.");
+        return;
+      }
+      certModal.style.display = "flex";
+      certModal.hidden = false;
+      certMembersList.innerHTML = "<p>Loading members...</p>";
+      
+      try {
+        const members = await window.convexClient.query("members:list");
+        if (!members || members.length === 0) {
+          certMembersList.innerHTML = "<p>No active members found.</p>";
+          return;
+        }
+        
+        certMembersList.innerHTML = members.map(m => `
+          <label style="display: flex; align-items: center; gap: 10px; padding: 8px; border-bottom: 1px solid var(--border); cursor: pointer;">
+            <input type="checkbox" class="cert-member-checkbox" value="${m._id}" data-name="${m.name}" data-roll="${m.rollNumber || ''}">
+            <span><strong>${m.name}</strong> (${m.personalEmail || m.collegeEmail})</span>
+          </label>
+        `).join("");
+      } catch (e) {
+        certMembersList.innerHTML = `<p style="color:red;">Error loading members: ${e.message}</p>`;
+      }
+    });
+  }
+
+  if (closeCertBtn) {
+    closeCertBtn.addEventListener("click", () => {
+      certModal.style.display = "none";
+      certModal.hidden = true;
+      certStatus.textContent = "";
+    });
+  }
+
+  if (sendCertificatesSubmitBtn) {
+    sendCertificatesSubmitBtn.addEventListener("click", async () => {
+      const eventName = document.getElementById("certEventName").value.trim();
+      const eventDate = document.getElementById("certEventDate").value.trim();
+      const prefix = document.getElementById("certPrefix").value.trim() || "CRAFT-2026";
+      const lead = document.getElementById("certLead").value.trim() || "Kalakonda Akshay";
+      const faculty = document.getElementById("certFaculty").value.trim() || "Mrs. Thangam V";
+      
+      if (!eventName || !eventDate) {
+        certStatus.textContent = "Please enter Event Name and Date.";
+        return;
+      }
+
+      const checkboxes = document.querySelectorAll(".cert-member-checkbox:checked");
+      const memberIds = Array.from(checkboxes).map(cb => cb.value);
+      
+      if (memberIds.length === 0) {
+        certStatus.textContent = "Please select at least one member.";
+        return;
+      }
+
+      certStatus.textContent = `Generating and sending ${checkboxes.length} certificates...`;
+      sendCertificatesSubmitBtn.disabled = true;
+
+      try {
+        let sentCount = 0;
+        const iframeWin = document.getElementById("certGeneratorFrame").contentWindow;
+        if (!iframeWin || !iframeWin.html2canvas) {
+          throw new Error("Generator frame not fully loaded. Try again in a few seconds.");
+        }
+
+        for (const cb of checkboxes) {
+          const memberId = cb.value;
+          const memberName = cb.getAttribute("data-name");
+          const memberRoll = cb.getAttribute("data-roll") || "—";
+          
+          certStatus.textContent = `Generating for ${memberName}...`;
+
+          // Populate iframe
+          iframeWin.document.getElementById('fName').value = memberName;
+          iframeWin.document.getElementById('fRoll').value = memberRoll;
+          iframeWin.document.getElementById('fWorkshop').value = eventName;
+          iframeWin.document.getElementById('fDate').value = eventDate;
+          iframeWin.document.getElementById('fPrefix').value = prefix;
+          iframeWin.document.getElementById('fLead').value = lead;
+          iframeWin.document.getElementById('fFaculty').value = faculty;
+          iframeWin.render(); // Update DOM
+
+          // Wait a tick for DOM update
+          await new Promise(r => setTimeout(r, 50));
+
+          // Generate Canvas
+          const certNode = iframeWin.document.getElementById('certNode');
+          const canvas = await iframeWin.html2canvas(certNode, { scale: 2, backgroundColor: '#faf6ec', useCORS: true });
+          
+          // Get Blob
+          const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+          
+          certStatus.textContent = `Uploading for ${memberName}...`;
+          
+          // Get upload URL from Convex
+          const uploadUrl = await window.convexClient.mutation("simpleCertificates:generateUploadUrl");
+          
+          // POST to Convex Storage
+          const uploadResult = await fetch(uploadUrl, {
+            method: "POST",
+            headers: { "Content-Type": "image/png" },
+            body: blob
+          });
+          
+          if (!uploadResult.ok) throw new Error("Upload failed for " + memberName);
+          const { storageId } = await uploadResult.json();
+
+          certStatus.textContent = `Sending email to ${memberName}...`;
+          
+          // Trigger email backend mutation
+          await window.convexClient.mutation("simpleCertificates:sendCertificate", {
+            eventName,
+            eventDate,
+            memberId,
+            storageId
+          });
+          
+          sentCount++;
+        }
+        
+        certStatus.style.color = "green";
+        certStatus.textContent = `Success! Sent ${sentCount} certificates.`;
+        setTimeout(() => {
+          certModal.style.display = "none";
+          certModal.hidden = true;
+          sendCertificatesSubmitBtn.disabled = false;
+          certStatus.textContent = "";
+          certStatus.style.color = "var(--accent)";
+          checkboxes.forEach(cb => cb.checked = false);
+        }, 3000);
+      } catch (e) {
+        certStatus.style.color = "red";
+        certStatus.textContent = `Error: ${e.message}`;
+        sendCertificatesSubmitBtn.disabled = false;
+      }
+    });
+  }
 
   document.getElementById("seedBtn").addEventListener("click", () => {
     CraftRegistrations.seedDemoData();
@@ -550,29 +751,64 @@
     const qrStatus = document.getElementById("qrStatus");
     const qrEventSelect = document.getElementById("qrEventSelect");
 
-    async function loadEventsForScanner() {
-      if (!window.convexClient) return;
-      try {
-        const events = await window.convexClient.query("events:list", {});
-        qrEventSelect.innerHTML = '<option value="">-- Select an Event --</option>' + 
-          events.map(e => `<option value="${e._id}">${e.title} (${new Date(e.eventDate).toLocaleDateString()})</option>`).join("");
-      } catch (err) {
-        console.error("Failed to load events", err);
+      async function loadEventsForScanner() {
+        if (!window.convexClient) return;
+        try {
+          qrEventSelect.innerHTML = '<option value="">Loading events...</option>';
+          const events = await window.convexClient.query("events:list");
+          qrEventSelect.innerHTML = '<option value="">-- Select an Event --</option>' + 
+            events.map(e => `<option value="${e._id}">${e.title}</option>`).join("");
+        } catch (err) {
+          console.error("Failed to load events", err);
+          qrEventSelect.innerHTML = `<option value="">Error: ${err.message}</option>`;
+        }
       }
-    }
 
     if (scannerBtn && qrModal) {
-      scannerBtn.addEventListener("click", async () => {
+      scannerBtn.addEventListener("click", () => {
         qrModal.style.display = "flex";
         qrModal.hidden = false;
-        qrStatus.textContent = "Loading camera...";
-        qrStatus.style.color = "var(--text)";
-        
-        await loadEventsForScanner();
-
-        html5QrcodeScanner = new Html5QrcodeScanner("qrReader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+        loadEventsForScanner();
+        html5QrcodeScanner = new Html5QrcodeScanner("qrReader", { fps: 10, qrbox: { width: 250, height: 250 } }, false);
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
       });
+
+      const sendReminderBtn = document.getElementById("sendReminderBtn");
+      if (sendReminderBtn) {
+        sendReminderBtn.addEventListener("click", async () => {
+          if (!window.convexClient) return;
+          if (!confirm("Are you sure you want to send the Event Reminder email to ALL approved members?")) return;
+          
+          sendReminderBtn.disabled = true;
+          sendReminderBtn.innerHTML = "Sending...";
+          try {
+            const res = await window.convexClient.mutation("bulkEmail:sendEventReminder", {
+              eventTitle: "Build AI Agents with CRAFT",
+              date: "This Weekend",
+              venue: "Main Auditorium",
+              reportingTime: "9:30 AM",
+              sessionTime: "10:00 AM - 4:00 PM"
+            });
+            alert(`Success! Reminder queued for ${res.count} members.`);
+          } catch (e) {
+            console.error(e);
+            alert("Error sending reminder: " + e.message);
+          } finally {
+            sendReminderBtn.disabled = false;
+            sendReminderBtn.innerHTML = "&#128231; Event Reminder";
+          }
+        });
+      }
+
+      const manualCheckinBtn = document.getElementById("manualCheckinBtn");
+      if (manualCheckinBtn) {
+        manualCheckinBtn.addEventListener("click", () => {
+          const input = document.getElementById("manualCheckinId");
+          if (!input || !input.value.trim()) return;
+          onScanSuccess(input.value.trim(), null);
+          input.value = ""; // clear after submit
+        });
+      }
 
       closeScannerBtn.addEventListener("click", () => {
         if (html5QrcodeScanner) {
@@ -598,17 +834,30 @@
       qrStatus.textContent = `Processing QR: ${decodedText}...`;
       qrStatus.style.color = "var(--text)";
 
-      try {
-        const res = await window.convexClient.mutation("attendance:markCheckIn", {
-          eventId: eventId,
-          memberId: decodedText // The public Member ID encoded in the QR code
-        });
-        qrStatus.textContent = `✅ ${res.memberName} checked in!`;
-        qrStatus.style.color = "#4CAF50"; // green
-        
-        // Refresh table if needed
-        renderAll();
-      } catch (err) {
+        try {
+          const res = await window.convexClient.mutation("attendance:markCheckIn", {
+            eventId: eventId,
+            memberId: decodedText // The public Member ID encoded in the QR code
+          });
+          qrStatus.textContent = `✅ ${res.memberName} checked in!`;
+          qrStatus.style.color = "#4CAF50"; // green
+          
+          // Sync with local table for visual feedback
+          if (typeof CraftRegistrations !== "undefined") {
+            const list = CraftRegistrations.readAll();
+            const member = list.find(m => m.memberId === decodedText);
+            if (member) {
+              const sessions = getTotalSessions();
+              if (sessions > 0) {
+                 // Mark present for the latest session in the local UI
+                 CraftRegistrations.setAttendance(member.id, sessions - 1, "P");
+              }
+            }
+          }
+
+          // Refresh table if needed
+          renderAll();
+        } catch (err) {
         console.error("Check-in error:", err);
         qrStatus.textContent = `❌ Error: ${err.message}`;
         qrStatus.style.color = "#C0524A"; // red

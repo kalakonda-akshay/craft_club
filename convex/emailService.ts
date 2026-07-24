@@ -4,11 +4,11 @@ import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 
-const RESEND_API_URL = "https://api.resend.com/emails";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyJOHgKLxbAWfF7saTsQVADWXY-4HnfJhvIy1XmvMm-A7_4W-jjxku59hwPyEX2S2OQ/exec";
 const MAX_RETRIES = 3;
 
 /**
- * Internal action to send an email using the Resend API.
+ * Internal action to send an email using Google Apps Script.
  * Uses native fetch. Supports automatic retries.
  */
 export const sendEmail = internalAction({
@@ -22,44 +22,34 @@ export const sendEmail = internalAction({
     retryCount: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      console.error("Activity: Email Send Failed - Missing RESEND_API_KEY environment variable.");
-      throw new Error("Missing RESEND_API_KEY");
-    }
-
+    // No API key needed for Apps Script deployed as "Anyone"
     const currentRetry = args.retryCount || 0;
     const recipientList = Array.isArray(args.to) ? args.to : [args.to];
-    
-    // Resend requires a specific format for 'from': "Name <email@domain.com>"
-    const fromString = `${args.fromName} <${args.fromEmail}>`;
+    const toStr = recipientList.join(","); // Apps script expects comma-separated
 
     try {
-      const response = await fetch(RESEND_API_URL, {
+      const response = await fetch(GAS_URL, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: fromString,
-          to: recipientList,
+          fromName: args.fromName,
+          to: toStr,
           subject: args.subject,
-          html: args.html,
-          reply_to: args.replyTo,
+          html: args.html
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || `Resend API error: ${response.status}`);
+      if (data.status !== "success") {
+        throw new Error(data.message || `Apps Script error`);
       }
 
       console.info("Activity: Email Sent Successfully", {
         to: recipientList,
         subject: args.subject,
-        resendId: data.id,
         retryCount: currentRetry,
       });
 

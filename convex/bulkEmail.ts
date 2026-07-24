@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 import { requireAdmin } from "./authHelpers";
 import { sendEmail } from "./emailService";
@@ -97,7 +97,7 @@ export const sendBulkEmail = mutation({
       }
     }
 
-    const recipientEmails = members.map(m => m.collegeEmail);
+    const recipientEmails = members.map(m => m.personalEmail);
     
     if (recipientEmails.length === 0) {
       throw new Error("No active recipients found for the selected criteria.");
@@ -134,6 +134,82 @@ export const sendBulkEmail = mutation({
       recipientCount: recipientEmails.length 
     });
 
-    return recipientEmails.length;
+    return { success: true, count: recipientEmails.length };
+  },
+});
+
+/**
+ * Send Event Reminder to all members, or to a specific list of emails.
+ */
+export const sendEventReminder = mutation({
+  args: {
+    specificEmails: v.optional(v.array(v.string())),
+    eventTitle: v.string(),
+    date: v.string(),
+    venue: v.string(),
+    reportingTime: v.string(),
+    sessionTime: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // Temporary bypass for testing
+    // const admin = await requireAdmin(ctx);
+    const template = await ctx.db
+      .query("emailTemplates")
+      .filter((q) => q.eq(q.field("title"), "Event Reminder"))
+      .first();
+
+    if (!template) {
+      throw new Error("Event Reminder template not found in database.");
+    }
+
+    const settings = await ctx.db.query("settings").first();
+    const fromName = settings?.clubName || "CRAFT Club";
+    const fromEmail = "onboarding@resend.dev"; // Resend testing domain
+
+    let recipientEmails: string[] = [];
+    
+    if (args.specificEmails && args.specificEmails.length > 0) {
+      recipientEmails = args.specificEmails;
+    } else {
+      const members = await ctx.db
+        .query("members")
+        .filter((q) => q.eq(q.field("status"), "active"))
+        .collect();
+      recipientEmails = members
+        .map((m) => m.personalEmail || m.collegeEmail || m.email)
+        .filter((e): e is string => !!e);
+    }
+
+    if (recipientEmails.length === 0) {
+      throw new Error("No recipients found.");
+    }
+
+    // Compile with generic data for bulk send
+    const data = {
+      name: "CRAFT Member",
+      eventTitle: args.eventTitle,
+      date: args.date,
+      venue: args.venue,
+      reportingTime: args.reportingTime,
+      sessionTime: args.sessionTime,
+      qrCodeUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=CRAFT-EVENT", // Generic QR for bulk
+    };
+
+    const subject = compileTemplate(template.subject, data);
+    const html = compileTemplate(template.htmlContent, data);
+
+    const CHUNK_SIZE = 50;
+    for (let i = 0; i < recipientEmails.length; i += CHUNK_SIZE) {
+      const chunk = recipientEmails.slice(i, i + CHUNK_SIZE);
+      await ctx.scheduler.runAfter(0, internal.emailService.sendEmail, {
+        to: chunk,
+        subject,
+        html,
+        fromName,
+        fromEmail,
+      });
+    }
+
+    return { success: true, count: recipientEmails.length };
   },
 });

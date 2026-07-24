@@ -51,6 +51,33 @@ const CraftContent = (function () {
     saveClubStats(data);
     return data;
   }
+  
+  // Removes the last session conducted (decrements the count, min 0)
+  function removeSession() {
+    const data = getClubStats();
+    if ((data.totalSessionsConducted || 0) > 0) {
+      data.totalSessionsConducted -= 1;
+      saveClubStats(data);
+      
+      // Also truncate attendance array for all members in local storage
+      if (typeof CraftRegistrations !== "undefined") {
+        const list = CraftRegistrations.readAll();
+        let changed = false;
+        list.forEach(r => {
+          if (r.attendance && r.attendance.length > data.totalSessionsConducted) {
+            r.attendance = r.attendance.slice(0, data.totalSessionsConducted);
+            r.sessionsAttended = r.attendance.filter(a => a === "P").length;
+            changed = true;
+          }
+        });
+        if (changed) {
+          try { localStorage.setItem("craft-registrations-v1", JSON.stringify(list)); }
+          catch (e) {}
+        }
+      }
+    }
+    return data;
+  }
 
   /* ---------------- Build of the Month ---------------- */
   const BOM_KEY = "craft-build-of-month-v1";
@@ -148,7 +175,7 @@ const CraftContent = (function () {
   return {
     getAnnouncements, saveAnnouncements, resetAnnouncements,
     getEvents, saveEvents, resetEvents,
-    getClubStats, saveClubStats, resetClubStats, addSession,
+    getClubStats, saveClubStats, resetClubStats, addSession, removeSession,
     getBuildOfMonth, saveBuildOfMonth, resetBuildOfMonth,
     getProjects, saveProjects, resetProjects,
     getGallery, saveGallery, resetGallery,

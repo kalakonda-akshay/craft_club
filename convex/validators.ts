@@ -24,7 +24,7 @@ export function validateEmail(email: string, fieldName = "Email"): void {
 // PHONE VALIDATION
 // ============================================================
 
-const PHONE_REGEX = /^\+?[1-9]\d{6,14}$/;
+const PHONE_REGEX = /^\+?[0-9]\d{6,14}$/;
 
 /**
  * Validates a phone number format (international E.164-like).

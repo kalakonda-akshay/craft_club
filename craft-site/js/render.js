@@ -49,25 +49,30 @@ function observeReveals(root) {
     </div>
   `).join("");
 
-  const iconRow = () => `
+  const iconRow = (m) => `
     <div class="student-icons">
-      <span class="icon-btn" title="GitHub placeholder">⌥</span>
-      <span class="icon-btn" title="LinkedIn placeholder">in</span>
-      <span class="icon-btn" title="Instagram placeholder">◎</span>
+      ${m.github ? `<a href="${m.github}" target="_blank" class="icon-btn" title="GitHub">⌥</a>` : ''}
+      ${m.linkedin ? `<a href="${m.linkedin}" target="_blank" class="icon-btn" title="LinkedIn">in</a>` : ''}
     </div>`;
 
   setTimeout(() => {
     grid.innerHTML = CRAFT_LEADERSHIP.map(m => `
-      <article class="student-card lead-card reveal">
-        <div class="photo-ring photo-ring--sm"><div class="photo-ring-inner">👤</div></div>
-        <h3>${m.name} <span class="status-dot" title="Active"></span></h3>
-        <span class="student-role">${m.role}</span>
-        <span class="badge-pill" style="margin-top:8px;">${m.team}</span>
+      <article class="student-card lead-card reveal glass-card">
+        <div class="lead-header">
+          <div class="photo-ring photo-ring--sm">
+            <img src="${m.photo || 'https://api.dicebear.com/7.x/initials/svg?seed=' + encodeURIComponent(m.name)}" alt="${m.name}" class="lead-photo" />
+          </div>
+          <div class="lead-title-group">
+            <h3>${m.name} <span class="status-dot" title="Active"></span></h3>
+            <span class="student-role">${m.role}</span>
+          </div>
+        </div>
+        <span class="badge-pill" style="margin-top:12px;">${m.team}</span>
         <p class="lead-intro">${m.intro}</p>
         <p class="lead-focus"><strong>Focus:</strong> ${m.focus}</p>
         <div class="tag-row lead-tags">${m.skills.slice(0, 3).map(s => `<span class="tag">${s}</span>`).join("")}</div>
         <p class="lead-contribution">&ldquo;${m.contribution}&rdquo;</p>
-        ${iconRow()}
+        ${iconRow(m)}
         <span class="lead-since">${m.since}</span>
       </article>
     `).join("");
