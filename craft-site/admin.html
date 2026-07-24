@@ -127,45 +127,45 @@
       </div>
   
       <!-- Certificates Modal -->
-    <div id="certModal" class="idcard-modal-overlay" hidden style="z-index: 1000; display: none; align-items: center; justify-content: center;">
-      <div class="idcard-modal" style="width: 100%; max-width: 600px; padding: 20px; max-height: 90vh; overflow-y: auto;">
-        <div class="idcard-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h2 style="margin: 0;">Generate Certificates</h2>
+      <div id="certModal" class="idcard-modal-overlay" hidden style="z-index: 1000; display: none; align-items: center; justify-content: center;">
+        <div class="idcard-modal-box" style="width: 100%; max-width: 600px; padding: 24px; max-height: 90vh; overflow-y: auto; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.15);">
+          <div class="idcard-modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: var(--text-heading); font-size: 20px;">Generate Certificates</h2>
           <button class="btn btn-ghost" id="closeCertBtn" style="font-size: 20px; padding: 5px 10px;">&times;</button>
         </div>
         <p style="margin-bottom: 20px; font-size: 14px; color: var(--ink-700);">Tick the checkboxes for the members who attended. They will immediately receive an email with their printable digital certificate.</p>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-        <div class="form-group">
-          <label>Workshop Title</label>
-          <input type="text" id="certEventName" placeholder="e.g. AI Agents & Automation" class="input">
-        </div>
-        <div class="form-group">
-          <label>Event Date</label>
-          <input type="text" id="certEventDate" placeholder="e.g. 24 July 2026" class="input">
-        </div>
-        <div class="form-group">
-          <label>Certificate ID Prefix</label>
-          <input type="text" id="certPrefix" value="CRAFT-2026" class="input">
-        </div>
-        <div class="form-group">
-          <label>Club Lead Name</label>
-          <input type="text" id="certLead" value="Kalakonda Akshay" class="input">
-        </div>
-        <div class="form-group" style="grid-column: span 2;">
-          <label>Faculty Coordinator Name</label>
-          <input type="text" id="certFaculty" value="Mrs. Thangam V" class="input">
-        </div>
+          <div class="form-group">
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--ink-700);">Workshop Title</label>
+            <input type="text" id="certEventName" placeholder="e.g. AI Agents & Automation" class="form-control">
+          </div>
+          <div class="form-group">
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--ink-700);">Event Date</label>
+            <input type="text" id="certEventDate" placeholder="e.g. 24 July 2026" class="form-control">
+          </div>
+          <div class="form-group">
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--ink-700);">Certificate ID Prefix</label>
+            <input type="text" id="certPrefix" value="CRAFT-2026" class="form-control">
+          </div>
+          <div class="form-group">
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--ink-700);">Club Lead Name</label>
+            <input type="text" id="certLead" value="Kalakonda Akshay" class="form-control">
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: var(--ink-700);">Faculty Coordinator Name</label>
+            <input type="text" id="certFaculty" value="Mrs. Thangam V" class="form-control">
+          </div>
       </div>
         
-        <h3 style="margin: 20px 0 10px; font-size: 16px;">Select Attendees</h3>
-        <div style="border: 1px solid var(--border); border-radius: 6px; padding: 10px; max-height: 300px; overflow-y: auto; background: var(--bg);" id="certMembersList">
+        <h3 style="margin: 24px 0 16px; font-size: 16px; color: var(--text-heading); border-bottom: 1px solid var(--border); padding-bottom: 8px;">Select Attendees</h3>
+        <div style="border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-height: 250px; overflow-y: auto; background: var(--canvas); margin-bottom: 24px;" id="certMembersList">
           <!-- Member checkboxes will be rendered here -->
-          <p style="padding: 10px; color: #777;">Loading members...</p>
+          <p style="padding: 10px; color: var(--ink-700); font-size: 14px;">Loading members...</p>
         </div>
         
-        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
-          <p id="certStatus" style="font-weight: 500; color: var(--accent); margin: 0;"></p>
-          <button class="btn btn-primary" id="sendCertificatesSubmitBtn" type="button">Send Certificates</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--border);">
+          <p id="certStatus" style="font-weight: 500; color: var(--accent); margin: 0; font-size: 14px; flex: 1;"></p>
+          <button class="btn btn-primary" id="sendCertificatesSubmitBtn" type="button" style="padding: 10px 24px;">Send Certificates</button>
         </div>
       </div>
     </div>
