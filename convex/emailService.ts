@@ -2,15 +2,8 @@
 
 import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
-import { internal } from "./_generated/api";
+import { Resend } from "resend";
 
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyJOHgKLxbAWfF7saTsQVADWXY-4HnfJhvIy1XmvMm-A7_4W-jjxku59hwPyEX2S2OQ/exec";
-const MAX_RETRIES = 3;
-
-/**
- * Internal action to send an email using Google Apps Script.
- * Uses native fetch. Supports automatic retries.
- */
 export const sendEmail = internalAction({
   args: {
     to: v.union(v.string(), v.array(v.string())),
@@ -22,63 +15,34 @@ export const sendEmail = internalAction({
     retryCount: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // No API key needed for Apps Script deployed as "Anyone"
-    const currentRetry = args.retryCount || 0;
-    const recipientList = Array.isArray(args.to) ? args.to : [args.to];
-    const toStr = recipientList.join(","); // Apps script expects comma-separated
+    // Make sure RESEND_API_KEY is set in Convex dashboard
+    if (!process.env.RESEND_API_KEY) {
+      console.warn("RESEND_API_KEY is not set. Email not sent.");
+      throw new Error("RESEND_API_KEY is missing in Convex environment variables.");
+    }
 
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
+    const toArray = Array.isArray(args.to) ? args.to : [args.to];
+    
     try {
-      const response = await fetch(GAS_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fromName: args.fromName,
-          to: toStr,
-          subject: args.subject,
-          html: args.html
-        }),
+      const { data, error } = await resend.emails.send({
+        // For testing, Resend requires you use onboarding@resend.dev unless you verify a custom domain
+        from: `${args.fromName} <onboarding@resend.dev>`,
+        to: toArray,
+        subject: args.subject,
+        html: args.html,
       });
 
-      const data = await response.json();
-
-      if (data.status !== "success") {
-        throw new Error(data.message || `Apps Script error`);
+      if (error) {
+        throw new Error(error.message);
       }
 
-      console.info("Activity: Email Sent Successfully", {
-        to: recipientList,
-        subject: args.subject,
-        retryCount: currentRetry,
-      });
-
-      return data;
-    } catch (error: any) {
-      console.error("Activity: Email Send Failed", {
-        to: recipientList,
-        subject: args.subject,
-        error: error.message,
-        retryCount: currentRetry,
-      });
-
-      if (currentRetry < MAX_RETRIES) {
-        console.info(`Activity: Scheduling Email Retry ${currentRetry + 1}/${MAX_RETRIES}`);
-        
-        // Exponential backoff: retry after 1min, 5mins, 15mins roughly, or just fixed intervals.
-        // For simplicity, let's delay by (currentRetry + 1) * 60 seconds
-        const delayMs = (currentRetry + 1) * 60 * 1000;
-        
-        await ctx.scheduler.runAfter(delayMs, internal.emailService.sendEmail, {
-          ...args,
-          retryCount: currentRetry + 1,
-        });
-      } else {
-        console.error("Activity: Email Max Retries Reached. Giving up.", {
-          to: recipientList,
-          subject: args.subject,
-        });
-      }
+      console.info("Activity: Email Sent Successfully via Resend", { data });
+      return { success: true, data };
+    } catch (err: any) {
+      console.error("Email send failed:", err);
+      throw new Error(err.message || "Failed to send email via Resend");
     }
   },
 });
