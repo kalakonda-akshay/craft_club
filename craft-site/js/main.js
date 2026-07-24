@@ -180,9 +180,20 @@
         }
       } catch (e) {
         console.error("Backend submission failed:", e);
-        alert("Registration failed! " + e.message);
-        formStatus.textContent = "Error: " + e.message;
-        formStatus.classList.remove("success");
+        if (e.message && e.message.includes("A pending join request already exists")) {
+          // They double clicked. Just show success!
+          formStatus.textContent = `Thanks, ${firstName} — your registration is noted. Your provisional ID card is below.`;
+          formStatus.classList.add("success");
+          if (entry) renderIdCard(entry);
+          alert(`Thanks, ${firstName}! Your registration was successful and your provisional ID card has been generated below. Please check your email (including Spam folder) for the Welcome email!`);
+          joinForm.reset();
+          pendingPhotoDataUrl = "";
+          if (fphotoPreview) fphotoPreview.innerHTML = "👤";
+        } else {
+          alert("Registration failed! " + e.message);
+          formStatus.textContent = "Error: " + e.message;
+          formStatus.classList.remove("success");
+        }
         if (btn) {
           btn.disabled = false;
           btn.textContent = originalBtnText;
