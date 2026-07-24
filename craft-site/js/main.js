@@ -108,6 +108,13 @@
         formStatus.classList.remove("success");
         return;
       }
+      const btn = joinForm.querySelector("button[type='submit']");
+      const originalBtnText = btn ? btn.textContent : "Join CRAFT";
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "Submitting...";
+      }
+
       const name = joinForm.fname.value.trim();
       let entry = null;
       if (typeof CraftRegistrations !== "undefined") {
@@ -118,20 +125,69 @@
           phone: joinForm.fphone ? joinForm.fphone.value.trim() : "",
           dob: joinForm.fdob ? joinForm.fdob.value : "", // stored as YYYY-MM-DD (native date input)
           year: joinForm.fyear.value,
-          dept: joinForm.fdept ? joinForm.fdept.value : "",
-          section: joinForm.fsection ? joinForm.fsection.value.trim() : "",
-          interest: joinForm.finterest ? joinForm.finterest.value : "",
+          dept: joinForm.fdept ? joinForm.fdept.value : "Unknown",
+          interest: joinForm.finterest ? joinForm.finterest.value : "None",
           profile: joinForm.fprofile ? joinForm.fprofile.value.trim() : "",
           photo: pendingPhotoDataUrl,
         });
       }
-      const firstName = name.split(" ")[0];
-      formStatus.textContent = `Thanks, ${firstName} — your registration is noted. Your provisional ID card is below.`;
-      formStatus.classList.add("success");
-      if (entry) renderIdCard(entry);
-      joinForm.reset();
-      pendingPhotoDataUrl = "";
-      if (fphotoPreview) fphotoPreview.innerHTML = "👤";
+
+      // Submit to actual Convex backend to trigger Welcome Email
+      try {
+        if (window.convexClient) {
+           await window.convexClient.mutation("joinRequests:submit", {
+              name: name,
+              rollNumber: joinForm.froll.value.trim(),
+              department: joinForm.fdept ? joinForm.fdept.value : "Unknown",
+              year: joinForm.fyear.value,
+              section: joinForm.fsection ? joinForm.fsection.value.trim() : "A",
+              collegeEmail: joinForm.femail.value.trim(),
+              phone: joinForm.fphone ? joinForm.fphone.value.trim() : "0000000000",
+              reasonToJoin: (joinForm.fprofile && joinForm.fprofile.value.trim()) ? joinForm.fprofile.value.trim() : "I want to join CRAFT."
+           });
+        }
+
+        let entry = null;
+        if (typeof CraftRegistrations !== "undefined") {
+          entry = await CraftRegistrations.add({
+            name,
+            roll: joinForm.froll.value.trim(),
+            email: joinForm.femail.value.trim(),
+            phone: joinForm.fphone ? joinForm.fphone.value.trim() : "",
+            dob: joinForm.fdob ? joinForm.fdob.value : "",
+            year: joinForm.fyear.value,
+            dept: joinForm.fdept ? joinForm.fdept.value : "",
+            section: joinForm.fsection ? joinForm.fsection.value.trim() : "",
+            interest: joinForm.finterest ? joinForm.finterest.value : "",
+            profile: joinForm.fprofile ? joinForm.fprofile.value.trim() : "",
+            photo: pendingPhotoDataUrl,
+          });
+        }
+
+        const firstName = name.split(" ")[0];
+        formStatus.textContent = `Thanks, ${firstName} — your registration is noted. Your provisional ID card is below.`;
+        formStatus.classList.add("success");
+        if (entry) renderIdCard(entry);
+        
+        alert(`Thanks, ${firstName}! Your registration was successful and your provisional ID card has been generated below. Please check your email (including Spam folder) for the Welcome email!`);
+        
+        joinForm.reset();
+        pendingPhotoDataUrl = "";
+        if (fphotoPreview) fphotoPreview.innerHTML = "👤";
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = originalBtnText;
+        }
+      } catch (e) {
+        console.error("Backend submission failed:", e);
+        alert("Registration failed! " + e.message);
+        formStatus.textContent = "Error: " + e.message;
+        formStatus.classList.remove("success");
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = originalBtnText;
+        }
+      }
     });
   }
 
