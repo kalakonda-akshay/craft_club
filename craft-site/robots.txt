@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://craft-club.akshaykalakonda.qzz.io/sitemap.xml
