@@ -94,7 +94,7 @@ function populateDashboard(data) {
   document.getElementById("cardName").textContent = m.name;
   document.getElementById("cardRoll").textContent = m.rollNumber;
   document.getElementById("cardId").textContent = m.memberId;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(m.memberId)}`;
+  const qrUrl = `https://quickchart.io/qr?size=250&text=${encodeURIComponent(m.memberId)}`;
   document.getElementById("cardQrCode").src = qrUrl;
 
   // Stats

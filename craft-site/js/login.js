@@ -281,7 +281,7 @@
     const qrImage = document.getElementById("publicQrImage");
     const qrModal = document.getElementById("publicQrModal");
     if (qrImage && qrModal) {
-      qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(memberId)}`;
+      qrImage.src = `https://quickchart.io/qr?size=250&text=${encodeURIComponent(memberId)}`;
       qrModal.style.display = "flex";
     }
   };
