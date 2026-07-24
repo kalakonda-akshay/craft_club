@@ -23,6 +23,63 @@ const CraftContent = (function () {
       return raw ? JSON.parse(raw) : null;
     } catch (e) { return null; }
   }
+    // --- CLOUD SYNC LOGIC ---
+  async function uploadBase64(base64Str) {
+    if (!base64Str || !base64Str.startsWith("data:image/")) return base64Str;
+    try {
+      const res = await fetch(base64Str);
+      const blob = await res.blob();
+      const postUrl = await window.convexClient.mutation("content:generateUploadUrl");
+      const uploadRes = await fetch(postUrl, { method: "POST", headers: { "Content-Type": blob.type }, body: blob });
+      const { storageId } = await uploadRes.json();
+      const url = await window.convexClient.query("content:getFileUrl", { storageId });
+      return url;
+    } catch(e) {
+      console.error("Failed to upload image to Convex", e);
+      return base64Str;
+    }
+  }
+
+  async function processImages(obj) {
+    if (!obj) return obj;
+    if (typeof obj === "string") {
+      return await uploadBase64(obj);
+    }
+    if (Array.isArray(obj)) {
+      for (let i = 0; i < obj.length; i++) {
+        obj[i] = await processImages(obj[i]);
+      }
+    } else if (typeof obj === "object") {
+      for (const k in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+          obj[k] = await processImages(obj[k]);
+        }
+      }
+    }
+    return obj;
+  }
+
+  async function syncToCloud(key, data) {
+    if (!window.convexClient) return;
+    try {
+      // Show saving indicator on UI if we are in admin
+      const statusEls = document.querySelectorAll("[id$='SaveStatus']");
+      statusEls.forEach(el => {
+         if (el.textContent.includes("Saved")) el.textContent = "Uploading images and saving to cloud...";
+      });
+
+      const processed = await processImages(JSON.parse(JSON.stringify(data)));
+      writeRaw(key, processed); // update local with clean URLs
+      await window.convexClient.mutation("content:saveContent", { key, data: JSON.stringify(processed) });
+      
+      statusEls.forEach(el => {
+         if (el.textContent.includes("Uploading")) el.textContent = "Saved to cloud ?" refresh homepage to see it live.";
+      });
+    } catch (e) {
+      console.error("Failed to sync to cloud:", e);
+    }
+  }
+  // -------------------------
   function writeRaw(key, value) {
     try { localStorage.setItem(key, JSON.stringify(value)); return true; }
     catch (e) { return false; }
@@ -37,7 +94,7 @@ const CraftContent = (function () {
     }
     return data;
   }
-  function saveClubStats(data) { writeRaw(STATS_KEY, data); }
+  function saveClubStats(data) { writeRaw(STATS_KEY, data); syncToCloud(STATS_KEY, data); }
   function resetClubStats() {
     const data = (typeof CRAFT_CLUB_STATS !== "undefined") ? Object.assign({}, CRAFT_CLUB_STATS) : {};
     writeRaw(STATS_KEY, data);
@@ -89,7 +146,7 @@ const CraftContent = (function () {
     }
     return data;
   }
-  function saveBuildOfMonth(data) { writeRaw(BOM_KEY, data); }
+  function saveBuildOfMonth(data) { writeRaw(BOM_KEY, data); syncToCloud(BOM_KEY, data); }
   function resetBuildOfMonth() {
     const data = (typeof CRAFT_BUILD_OF_MONTH !== "undefined") ? Object.assign({}, CRAFT_BUILD_OF_MONTH) : {};
     writeRaw(BOM_KEY, data);
@@ -106,7 +163,7 @@ const CraftContent = (function () {
     }
     return data;
   }
-  function saveProjects(data) { writeRaw(PROJ_KEY, data); }
+  function saveProjects(data) { writeRaw(PROJ_KEY, data); syncToCloud(PROJ_KEY, data); }
   function resetProjects() {
     const data = (typeof CRAFT_PROJECTS !== "undefined") ? CRAFT_PROJECTS.map(p => Object.assign({ id: uid() }, p)) : [];
     writeRaw(PROJ_KEY, data);
@@ -182,3 +239,4 @@ const CraftContent = (function () {
     uid,
   };
 })();
+

@@ -1,3 +1,16 @@
+(async function() {
+  /* -- CLOUD SYNC -- */
+  try {
+    if (window.convexClient) {
+      const keys = ["craft-announcements-v1", "craft-events-v1", "craft-build-v1", "craft-projects-v1"];
+      for (const k of keys) {
+        const dataStr = await window.convexClient.query("content:getContent", { key: k });
+        if (dataStr) localStorage.setItem(k, dataStr);
+      }
+    }
+  } catch (e) {
+    console.warn("Failed to sync CMS from Convex", e);
+  }
 /* =========================================================
    CRAFT — Renders leadership cards from js/data.js and drives
    the "01 / Club Agenda" process-line scroll progress.
@@ -496,4 +509,6 @@ function observeReveals(root) {
       </article>`;
   }).join("");
   observeReveals(grid);
+})();
+
 })();
