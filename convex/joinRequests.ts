@@ -249,7 +249,7 @@ export const approve = mutation({
     });
 
     // 5. Send Approval Email with QR Code
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(memberId)}`;
+    const qrCodeUrl = `https://quickchart.io/qr?size=250&text=${encodeURIComponent(memberId)}`;
     await sendJoinRequestApproved(ctx, request.personalEmail || request.collegeEmail, {
       name: request.name,
       memberId: memberId,
@@ -346,7 +346,7 @@ export const triggerMockEmail = mutation({
   args: { email: v.string(), name: v.string(), type: v.string() },
   handler: async (ctx, args) => {
     if (args.type === "accepted") {
-      await sendJoinRequestApproved(ctx, args.email, { name: args.name, memberId: generateMemberId(), qrCodeUrl: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=CRAFT-MOCK-ID" });
+      await sendJoinRequestApproved(ctx, args.email, { name: args.name, memberId: generateMemberId(), qrCodeUrl: "https://quickchart.io/qr?size=250&text=CRAFT-MOCK-ID" });
     } else if (args.type === "rejected") {
       await sendJoinRequestRejected(ctx, args.email, { name: args.name, reason: "Did not meet club requirements" });
     }

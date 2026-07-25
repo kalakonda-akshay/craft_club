@@ -591,3 +591,64 @@ export const search = query({
     };
   },
 });
+
+// ============================================================
+// DELETE / ARCHIVE MEMBER
+// ============================================================
+
+export const deleteMember = mutation({
+  args: {
+    memberId: v.string(),
+    archiveOnly: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_memberId", (q) => q.eq("memberId", args.memberId))
+      .first();
+      
+    if (!member) {
+      throw new Error("Member not found.");
+    }
+    
+    if (args.archiveOnly) {
+      await ctx.db.patch(member._id, { status: "archived" });
+      return { success: true, action: "archived" };
+    }
+    
+    // Permanent Cascade Delete
+    // 1. Delete Attendance
+    const attendanceRecords = await ctx.db
+      .query("attendance")
+      .withIndex("by_memberId", (q) => q.eq("memberId", member._id))
+      .collect();
+    for (const record of attendanceRecords) {
+      await ctx.db.delete(record._id);
+    }
+    
+    // 2. Delete Certificates
+    const certificates = await ctx.db
+      .query("certificates")
+      .withIndex("by_memberId", (q) => q.eq("memberId", member._id))
+      .collect();
+    for (const cert of certificates) {
+      await ctx.db.delete(cert._id);
+    }
+    
+    // 3. Delete Event Registrations
+    const registrations = await ctx.db
+      .query("eventRegistrations")
+      .withIndex("by_memberId", (q) => q.eq("memberId", member._id))
+      .collect();
+    for (const reg of registrations) {
+      await ctx.db.delete(reg._id);
+    }
+    
+    // 4. Delete the Member
+    await ctx.db.delete(member._id);
+    
+    return { success: true, action: "deleted" };
+  },
+});

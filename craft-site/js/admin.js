@@ -518,6 +518,7 @@
     });
   }
 
+
   // --- DELETION REQUESTS LOGIC ---
   let deletionRequests = [];
   let currentDeletionFilter = "Pending";
@@ -549,38 +550,38 @@
       
       let actions = "";
       if (r.status === "Pending") {
-        actions = 
-          <button class="btn btn-outline" style="color: #16a34a; border-color: #16a34a; padding: 4px 10px; font-size: 12px; margin-right: 5px;" onclick="updateDeletionRequest('\', 'Approved')">Approve</button>
-          <button class="btn btn-outline" style="color: #ef4444; border-color: #ef4444; padding: 4px 10px; font-size: 12px;" onclick="updateDeletionRequest('\', 'Rejected')">Reject</button>
-        ;
+        actions = `
+          <button class="btn btn-outline" style="color: #16a34a; border-color: #16a34a; padding: 4px 10px; font-size: 12px; margin-right: 5px;" onclick="updateDeletionRequest('${r._id}', 'Approved')">Approve</button>
+          <button class="btn btn-outline" style="color: #ef4444; border-color: #ef4444; padding: 4px 10px; font-size: 12px;" onclick="updateDeletionRequest('${r._id}', 'Rejected')">Reject</button>
+        `;
       }
 
       const statusColors = { Pending: "#ca8a04", Approved: "#16a34a", Rejected: "#ef4444" };
       const statusBg = { Pending: "#fef08a", Approved: "#bbf7d0", Rejected: "#fecaca" };
 
-      return 
+      return `
         <tr>
-          <td><div class="admin-applicant-name">\</div></td>
-          <td>\</td>
+          <td><div class="admin-applicant-name">${r.memberName}</div></td>
+          <td>${r.memberId}</td>
           <td>-</td>
-          <td>\</td>
-          <td>\</td>
-          <td><span style="background: \; color: \; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 500;">\</span></td>
-          <td>\</td>
+          <td>${r.reason}</td>
+          <td>${dateStr}</td>
+          <td><span style="background: ${statusBg[r.status]}; color: ${statusColors[r.status]}; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 500;">${r.status}</span></td>
+          <td>${actions}</td>
         </tr>
-      ;
+      `;
     }).join("");
   }
 
   window.updateDeletionRequest = async function(id, status) {
     if (!window.convexClient) return;
-    if (!confirm(Are you sure you want to \ this request?)) return;
+    if (!confirm(`Are you sure you want to ${status === "Approved" ? "APPROVE (permanently delete member)" : "REJECT"} this request?`)) return;
     
     try {
       await window.convexClient.mutation("deletionRequests:updateRequestStatus", { requestId: id, status: status });
       await loadDeletionRequests();
       if (status === "Approved") renderAll(); // refresh main table since member is deleted
-      alert(Request \ successfully.);
+      alert(`Request ${status} successfully.`);
     } catch (e) {
       console.error(e);
       alert("Failed to update request.");
@@ -602,7 +603,6 @@
       }
       const list = CraftRegistrations.readAll();
       renderStats();
-      loadDeletionRequests();
       renderFilters();
       renderTable();
       renderChart(list);
@@ -1154,4 +1154,3 @@
     });
   }
   // --------------------------
-

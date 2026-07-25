@@ -624,3 +624,113 @@ export const templateWellDone = (data: { name: string }) => masterTemplate(`
     </tr>
   </table>
 `);
+
+
+// ============================================================
+// DELETION REQUESTS
+// ============================================================
+
+export const deletionRequestReceivedHtml = (name: string, memberId: string, department: string, reason: string, submittedAt: string) => masterTemplate(`
+  <div style="padding: 30px;">
+    <h2 class="text-gold" style="margin-top: 0; font-size: 20px; font-weight: 700;">MEMBER DELETION REQUEST <br/><span style="color: #c89637;">RECEIVED</span></h2>
+    <p>Hello <strong>${name}</strong>,</p>
+    <p>We have successfully received your request to leave CRAFT.</p>
+    <p>We're sorry to see you go and appreciate the time, effort, and enthusiasm you contributed to our community.</p>
+    <p>Your request has been forwarded to the CRAFT Leadership Team for review.</p>
+    
+    <div style="border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px; margin: 20px 0; background-color: #fafafa;">
+      <h3 style="margin-top: 0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 8px;">REQUEST DETAILS</h3>
+      <table style="width: 100%; font-size: 14px;">
+        <tr>
+          <td style="padding: 4px 0; color: #555; width: 30%;">Member ID</td>
+          <td style="padding: 4px 0; font-weight: 500;">${memberId}</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 0; color: #555;">Department</td>
+          <td style="padding: 4px 0; font-weight: 500;">${department}</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 0; color: #555;">Reason</td>
+          <td style="padding: 4px 0; font-weight: 500;">${reason}</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 0; color: #555;">Status</td>
+          <td style="padding: 4px 0; font-weight: 500; color: #c89637;">Pending Review</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 0; color: #555;">Submitted</td>
+          <td style="padding: 4px 0; font-weight: 500;">${submittedAt}</td>
+        </tr>
+      </table>
+    </div>
+    
+    <div style="border-left: 3px solid #04162e; padding-left: 15px; margin-top: 20px; background-color: #f4f6f8; padding: 10px 15px; border-radius: 0 4px 4px 0;">
+      <p style="margin: 0; font-size: 14px;"><strong>Need to cancel this request?</strong></p>
+      <p style="margin: 5px 0 0; font-size: 13px; color: #555;">You may withdraw your deletion request before it is approved by contacting the CRAFT Leadership Team.</p>
+    </div>
+  </div>
+`);
+
+export const deletionRequestApprovedHtml = (name: string, memberId: string, deletedAt: string) => masterTemplate(`
+  <div style="padding: 30px;">
+    <h2 style="margin-top: 0; font-size: 20px; font-weight: 700; color: #15803d;">MEMBERSHIP DELETION <br/><span style="color: #16a34a;">APPROVED</span></h2>
+    <p>Hello <strong>${name}</strong>,</p>
+    <p>Your request to leave CRAFT has been approved.</p>
+    <p>Your membership has now been removed from the club.</p>
+    
+    <div style="border: 1px solid #bbf7d0; border-radius: 6px; padding: 20px; margin: 20px 0; background-color: #f0fdf4;">
+      <h3 style="margin-top: 0; font-size: 14px; border-bottom: 1px solid #bbf7d0; padding-bottom: 8px; color: #166534;">SUMMARY</h3>
+      <table style="width: 100%; font-size: 14px;">
+        <tr>
+          <td style="padding: 4px 0; color: #15803d; width: 30%;">Member ID</td>
+          <td style="padding: 4px 0; font-weight: 500; color: #166534;">${memberId}</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 0; color: #15803d;">Deletion Date</td>
+          <td style="padding: 4px 0; font-weight: 500; color: #166534;">${deletedAt}</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 0; color: #15803d;">Status</td>
+          <td style="padding: 4px 0; font-weight: 500;"><span style="background: #bbf7d0; color: #166534; padding: 2px 8px; border-radius: 4px; font-size: 12px;">Deleted</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="border: 1px solid #fecdd3; border-radius: 6px; padding: 20px; margin: 20px 0; background-color: #fff1f2;">
+      <h3 style="margin-top: 0; font-size: 14px; border-bottom: 1px solid #fecdd3; padding-bottom: 8px; color: #9f1239;">YOUR ACCESS HAS BEEN REMOVED</h3>
+      <p style="font-size: 13px; color: #be123c;">You no longer have access to the Member Dashboard, Event Registrations, and Digital Member ID.</p>
+    </div>
+    
+    <div style="border-left: 3px solid #16a34a; padding-left: 15px; margin-top: 20px; background-color: #f0fdf4; padding: 10px 15px; border-radius: 0 4px 4px 0;">
+      <p style="margin: 0; font-size: 14px; color: #166534;"><strong>Thank you for being a part of CRAFT.</strong></p>
+      <p style="margin: 5px 0 0; font-size: 13px; color: #15803d;">We sincerely appreciate your contribution and wish you success in your future endeavors. You're always welcome to apply again during future recruitment drives.</p>
+    </div>
+  </div>
+`);
+
+export const deletionRequestRejectedHtml = (name: string, reason: string) => masterTemplate(`
+  <div style="padding: 30px;">
+    <h2 style="margin-top: 0; font-size: 20px; font-weight: 700; color: #b91c1c;">DELETION REQUEST <br/><span style="color: #ef4444;">REJECTED</span></h2>
+    <p>Hello <strong>${name}</strong>,</p>
+    <p>Your request to leave CRAFT has been reviewed.</p>
+    <p>After evaluation, your request has not been approved at this time.</p>
+    
+    <div style="border: 1px solid #fecaca; border-radius: 6px; padding: 20px; margin: 20px 0; background-color: #fef2f2;">
+      <h3 style="margin-top: 0; font-size: 14px; border-bottom: 1px solid #fecaca; padding-bottom: 8px; color: #991b1b;">REASON</h3>
+      <p style="font-size: 14px; color: #b91c1c; margin: 0;">${reason}</p>
+    </div>
+
+    <div style="border: 1px solid #bfdbfe; border-radius: 6px; padding: 20px; margin: 20px 0; background-color: #eff6ff;">
+      <h3 style="margin-top: 0; font-size: 14px; border-bottom: 1px solid #bfdbfe; padding-bottom: 8px; color: #1e3a8a;">CURRENT STATUS</h3>
+      <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #1d4ed8;">
+        <li>Membership Active</li>
+        <li>Dashboard Active</li>
+        <li>Workshop Access Active</li>
+      </ul>
+    </div>
+    
+    <div style="border-left: 3px solid #c89637; padding-left: 15px; margin-top: 20px; background-color: #fdfaf4; padding: 10px 15px; border-radius: 0 4px 4px 0;">
+      <p style="margin: 0; font-size: 13px; color: #b48600;">If you still wish to leave the club, you may contact the Leadership Team for further discussion.</p>
+    </div>
+  </div>
+`);
