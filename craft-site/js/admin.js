@@ -360,6 +360,7 @@
         CraftRegistrations.setAttendance(btn.dataset.id, idx, next);
         renderTable();
         renderStats();
+      loadDeletionRequests();
       });
     });
 
@@ -517,12 +518,91 @@
     });
   }
 
+  // --- DELETION REQUESTS LOGIC ---
+  let deletionRequests = [];
+  let currentDeletionFilter = "Pending";
+
+  async function loadDeletionRequests() {
+    if (!window.convexClient) return;
+    try {
+      deletionRequests = await window.convexClient.query("deletionRequests:getAllRequests");
+      renderDeletionTable();
+    } catch (e) {
+      console.error("Failed to load deletion requests", e);
+    }
+  }
+
+  function renderDeletionTable() {
+    const list = deletionRequests.filter(r => r.status === currentDeletionFilter);
+    const body = document.getElementById("deletionTableBody");
+    const empty = document.getElementById("deletionEmpty");
+
+    if (!list.length) {
+      body.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+
+    body.innerHTML = list.map(r => {
+      const dateStr = new Date(r.submittedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+      
+      let actions = "";
+      if (r.status === "Pending") {
+        actions = 
+          <button class="btn btn-outline" style="color: #16a34a; border-color: #16a34a; padding: 4px 10px; font-size: 12px; margin-right: 5px;" onclick="updateDeletionRequest('\', 'Approved')">Approve</button>
+          <button class="btn btn-outline" style="color: #ef4444; border-color: #ef4444; padding: 4px 10px; font-size: 12px;" onclick="updateDeletionRequest('\', 'Rejected')">Reject</button>
+        ;
+      }
+
+      const statusColors = { Pending: "#ca8a04", Approved: "#16a34a", Rejected: "#ef4444" };
+      const statusBg = { Pending: "#fef08a", Approved: "#bbf7d0", Rejected: "#fecaca" };
+
+      return 
+        <tr>
+          <td><div class="admin-applicant-name">\</div></td>
+          <td>\</td>
+          <td>-</td>
+          <td>\</td>
+          <td>\</td>
+          <td><span style="background: \; color: \; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 500;">\</span></td>
+          <td>\</td>
+        </tr>
+      ;
+    }).join("");
+  }
+
+  window.updateDeletionRequest = async function(id, status) {
+    if (!window.convexClient) return;
+    if (!confirm(Are you sure you want to \ this request?)) return;
+    
+    try {
+      await window.convexClient.mutation("deletionRequests:updateRequestStatus", { requestId: id, status: status });
+      await loadDeletionRequests();
+      if (status === "Approved") renderAll(); // refresh main table since member is deleted
+      alert(Request \ successfully.);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to update request.");
+    }
+  };
+
+  document.querySelectorAll(".deletion-filter").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".deletion-filter").forEach(b => b.classList.remove("active", "btn-primary"));
+      btn.classList.add("active");
+      currentDeletionFilter = btn.dataset.filter;
+      renderDeletionTable();
+    });
+  });
+  // -------------------------------
     async function renderAll() {
       if (typeof CraftRegistrations.syncWithConvex === 'function') {
         await CraftRegistrations.syncWithConvex(); 
       }
       const list = CraftRegistrations.readAll();
       renderStats();
+      loadDeletionRequests();
       renderFilters();
       renderTable();
       renderChart(list);
@@ -1074,3 +1154,4 @@
     });
   }
   // --------------------------
+

@@ -134,3 +134,55 @@ function populateDashboard(data) {
     `).join("");
   }
 }
+
+  // --- DELETION REQUEST LOGIC ---
+  if (data.member) {
+    const m = data.member;
+    const nameInput = document.getElementById("delName");
+    const idInput = document.getElementById("delMemberId");
+    const deptInput = document.getElementById("delDept");
+    if (nameInput) nameInput.value = m.name || "";
+    if (idInput) idInput.value = m.memberId || "";
+    if (deptInput) deptInput.value = m.department || "";
+  }
+
+  const deletionForm = document.getElementById("deletionRequestForm");
+  if (deletionForm) {
+    deletionForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const reason = document.getElementById("delReason").value;
+      const comments = document.getElementById("delComments").value;
+      const ack = document.getElementById("delAcknowledge").checked;
+      
+      if (!reason || !ack) return;
+      
+      const submitBtn = document.getElementById("delSubmitBtn");
+      const submitText = document.getElementById("delSubmitText");
+      
+      submitBtn.disabled = true;
+      submitText.textContent = "Submitting...";
+      
+      try {
+        await window.convexClient.mutation("deletionRequests:submitRequest", {
+          convexMemberId: session._id,
+          reason: reason,
+          comments: comments
+        });
+        
+        alert("Your deletion request has been submitted successfully. The leadership team will review it shortly.");
+        deletionForm.reset();
+        if (data.member) {
+          document.getElementById("delName").value = data.member.name;
+          document.getElementById("delMemberId").value = data.member.memberId;
+          document.getElementById("delDept").value = data.member.department;
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to submit request. Please try again later.");
+      } finally {
+        submitBtn.disabled = false;
+        submitText.textContent = "Submit Deletion Request";
+      }
+    });
+  }
+  // -----------------------------

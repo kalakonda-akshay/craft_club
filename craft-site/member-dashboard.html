@@ -117,9 +117,75 @@
       </div>
 
     </section>
-  </main>
+      <!-- REQUEST MEMBERSHIP DELETION SECTION -->
+    <div style="margin-top: 40px; background: #fff; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; max-width: 1000px;">
+      <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;">
+        <h2 style="margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+          REQUEST MEMBERSHIP DELETION
+        </h2>
+      </div>
+      <div style="padding: 20px;">
+        <p style="margin-top: 0; font-size: 0.95rem; color: #555;">Please provide details below to request deletion of your membership.</p>
+        
+        <form id="deletionRequestForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Member Name</label>
+              <input type="text" id="delName" readonly style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: #f9f9f9; color: #555; pointer-events: none;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Member ID</label>
+              <input type="text" id="delMemberId" readonly style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: #f9f9f9; color: #555; pointer-events: none;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Department</label>
+              <input type="text" id="delDept" readonly style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: #f9f9f9; color: #555; pointer-events: none;">
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Reason for leaving <span style="color:red">*</span></label>
+              <select id="delReason" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
+                <option value="">Select a reason...</option>
+                <option value="Academic Workload">Academic Workload</option>
+                <option value="Internship">Internship</option>
+                <option value="Health">Health</option>
+                <option value="Placement Preparation">Placement Preparation</option>
+                <option value="Personal Reasons">Personal Reasons</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px;">Additional Comments (Optional)</label>
+              <textarea id="delComments" rows="3" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; resize: vertical;"></textarea>
+            </div>
+            
+            <div style="background: #fdfaf4; border: 1px solid #c89637; border-radius: 6px; padding: 15px; margin-top: 10px;">
+              <h4 style="margin: 0 0 5px 0; color: #b48600; font-size: 0.9rem;">Important Note</h4>
+              <p style="margin: 0; font-size: 0.85rem; color: #715A10;">Your request will be reviewed by the CRAFT Leadership Team. You will receive an email once a decision is made.</p>
+            </div>
+            
+            <label style="display: flex; gap: 10px; align-items: flex-start; margin-top: 10px; cursor: pointer;">
+              <input type="checkbox" id="delAcknowledge" required style="margin-top: 4px; accent-color: var(--accent);">
+              <span style="font-size: 0.85rem; color: #555;">I understand that my membership, Digital ID, and member privileges will be removed after approval.</span>
+            </label>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
+              <button type="button" class="btn btn-outline" style="padding: 10px 20px;">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="delSubmitBtn" style="background: #ef4444; border-color: #ef4444; padding: 10px 20px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px; vertical-align: middle;"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                <span id="delSubmitText">Submit Deletion Request</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+</main>
 
   <script type="module" src="js/convex-bundle.js"></script>
   <script type="module" src="js/member-dashboard.js"></script>
 </body>
 </html>
+
