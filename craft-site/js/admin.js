@@ -125,6 +125,7 @@
     { key: "accepted", label: "Accepted" },
     { key: "waitlist", label: "Waitlist" },
     { key: "rejected", label: "Rejected" },
+    { key: "archived", label: "Archived" }
   ];
 
   function getCap() {
@@ -236,7 +237,11 @@
   function renderTable() {
     let list = CraftRegistrations.readAll();
 
-    if (activeFilter !== "all") list = list.filter(r => r.status === activeFilter);
+    if (activeFilter !== "all") {
+      list = list.filter(r => r.status === activeFilter);
+    } else {
+      list = list.filter(r => r.status !== "archived");
+    }
     if (searchTerm.trim()) {
       const q = searchTerm.trim().toLowerCase();
       list = list.filter(r =>
@@ -300,11 +305,15 @@
         <td data-label="Submitted">${fmtDate(r.submittedAt)}</td>
         <td data-label="Status"><span class="status-badge status-badge--${r.status}">${r.status}</span></td>
         <td data-label="Actions">
-          <div class="admin-actions">
-            ${actionButtons(r)}
-            <button class="admin-action-btn admin-action-btn--idcard" data-idcard="${r.id}">🪪 ID Card</button>
-          </div>
-        </td>
+            <div class="admin-actions">
+              ${actionButtons(r)}
+              <button class="admin-action-btn admin-action-btn--idcard" data-idcard="${r.id}">💳 ID Card</button>
+              <button class="btn-delete-row" data-delete="${r.memberId || r.id}" title="Delete Member">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                Delete
+              </button>
+            </div>
+          </td>
       </tr>
     `;
       }).join("");
@@ -977,3 +986,91 @@
   })();
 
 
+
+
+  // --- DELETE MODAL LOGIC ---
+  let currentDeleteMemberId = null;
+  let currentDeleteRow = null;
+  const deleteModal = document.getElementById("deleteMemberModal");
+  const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+  const archiveOnlyCheck = document.getElementById("archiveOnlyCheck");
+  const confirmDeleteText = document.getElementById("confirmDeleteText");
+  const confirmDeleteSpinner = document.getElementById("confirmDeleteSpinner");
+
+  if (archiveOnlyCheck) {
+    archiveOnlyCheck.addEventListener("change", () => {
+      if (archiveOnlyCheck.checked) {
+        confirmDeleteText.textContent = "Archive Member";
+        confirmDeleteBtn.style.backgroundColor = "var(--accent)";
+      } else {
+        confirmDeleteText.textContent = "Delete Permanently";
+        confirmDeleteBtn.style.backgroundColor = "#ef4444";
+      }
+    });
+  }
+
+  function openDeleteModal(memberId, rowEl) {
+    currentDeleteMemberId = memberId;
+    currentDeleteRow = rowEl;
+    deleteModal.hidden = false;
+    if (archiveOnlyCheck) archiveOnlyCheck.checked = false;
+    confirmDeleteText.textContent = "Delete Permanently";
+    confirmDeleteBtn.style.backgroundColor = "#ef4444";
+  }
+
+  function closeDeleteModal() {
+    deleteModal.hidden = true;
+    currentDeleteMemberId = null;
+    currentDeleteRow = null;
+  }
+
+  if (cancelDeleteBtn) cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+  if (deleteModal) {
+    deleteModal.addEventListener("click", e => {
+      if (e.target === deleteModal) closeDeleteModal();
+    });
+  }
+
+  if (confirmDeleteBtn) {
+    confirmDeleteBtn.addEventListener("click", async () => {
+      if (!currentDeleteMemberId || !window.convexClient) return;
+      
+      const archiveOnly = archiveOnlyCheck ? archiveOnlyCheck.checked : false;
+      confirmDeleteBtn.disabled = true;
+      cancelDeleteBtn.disabled = true;
+      confirmDeleteSpinner.hidden = false;
+      confirmDeleteText.textContent = archiveOnly ? "Archiving..." : "Deleting...";
+      
+      try {
+        await window.convexClient.mutation("members:deleteMember", {
+          memberId: currentDeleteMemberId,
+          archiveOnly: archiveOnly
+        });
+        
+        // Success
+        closeDeleteModal();
+        if (currentDeleteRow) {
+          currentDeleteRow.classList.add("deleting");
+          setTimeout(() => renderAll(), 300); // animate out
+        } else {
+          renderAll();
+        }
+        
+        // Small toast (fallback to alert if no toast system)
+        alert(archiveOnly ? "? Member archived successfully." : "? Member deleted successfully.");
+        
+      } catch (err) {
+        console.error(err);
+        alert("Unable to delete member. Please try again.");
+      } finally {
+        confirmDeleteBtn.disabled = false;
+        cancelDeleteBtn.disabled = false;
+        confirmDeleteSpinner.hidden = true;
+        if (!deleteModal.hidden) {
+          confirmDeleteText.textContent = archiveOnly ? "Archive Member" : "Delete Permanently";
+        }
+      }
+    });
+  }
+  // --------------------------
