@@ -351,14 +351,7 @@
       });
     });
 
-    body.querySelectorAll("[data-att-index]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const idx = parseInt(btn.dataset.attIndex, 10);
-        const entry = CraftRegistrations.findById(btn.dataset.id);
-        const current = (entry.attendance || [])[idx] || null;
-        const next = current === null ? "P" : current === "P" ? "A" : null;
-        CraftRegistrations.setAttendance(btn.dataset.id, idx, next);
-        renderTable();
+
       body.querySelectorAll("[data-att-index]").forEach(btn => {
         btn.addEventListener("click", () => {
           const idx = parseInt(btn.dataset.attIndex, 10);
