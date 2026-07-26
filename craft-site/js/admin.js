@@ -1085,14 +1085,46 @@
   // --- DELETE MODAL LOGIC ---
   let currentDeleteMemberId = null;
   let currentDeleteRow = null;
-  const deleteModal = document.getElementById("deleteMemberModal");
-  const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-  const archiveOnlyCheck = document.getElementById("archiveOnlyCheck");
-  const confirmDeleteText = document.getElementById("confirmDeleteText");
-  const confirmDeleteSpinner = document.getElementById("confirmDeleteSpinner");
 
-  if (archiveOnlyCheck) {
+  function getDeleteModal() {
+    let modal = document.getElementById("deleteMemberModal");
+    if (modal) {
+      modal.remove(); // Forcefully destroy old cached version from HTML!
+    }
+    
+    modal = document.createElement("div");
+    modal.id = "deleteMemberModal";
+    modal.className = "idcard-modal-overlay";
+    // Force CSS reset to ensure it respects is-open class
+    modal.style.cssText = "z-index: 1000; align-items: center; justify-content: center;";
+    
+    modal.innerHTML = `
+      <div class="idcard-modal-box" style="width: 100%; max-width: 400px; padding: 24px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.15);">
+        <h3 style="margin-top: 0; color: var(--text-heading);">Delete Member?</h3>
+        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+          Are you sure you want to remove this member? This action cannot be undone unless you choose to just archive them.
+        </p>
+        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px; font-size: 14px; cursor: pointer;">
+          <input type="checkbox" id="archiveOnlyCheck" style="cursor: pointer;">
+          <span>Keep data and mark as archived instead of deleting</span>
+        </label>
+        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+          <button class="btn btn-ghost" id="cancelDeleteBtn">Cancel</button>
+          <button class="btn" id="confirmDeleteBtn" style="background-color: #ef4444; color: white;">
+            <span id="confirmDeleteSpinner" hidden style="margin-right: 6px;">⏳</span>
+            <span id="confirmDeleteText">Delete Permanently</span>
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+    const archiveOnlyCheck = document.getElementById("archiveOnlyCheck");
+    const confirmDeleteText = document.getElementById("confirmDeleteText");
+    const confirmDeleteSpinner = document.getElementById("confirmDeleteSpinner");
+
     archiveOnlyCheck.addEventListener("change", () => {
       if (archiveOnlyCheck.checked) {
         confirmDeleteText.textContent = "Archive Member";
@@ -1102,35 +1134,16 @@
         confirmDeleteBtn.style.backgroundColor = "#ef4444";
       }
     });
-  }
 
-  function openDeleteModal(memberId, rowEl) {
-    currentDeleteMemberId = memberId;
-    currentDeleteRow = rowEl;
-    deleteModal.classList.add("is-open");
-    if (archiveOnlyCheck) archiveOnlyCheck.checked = false;
-    confirmDeleteText.textContent = "Delete Permanently";
-    confirmDeleteBtn.style.backgroundColor = "#ef4444";
-  }
-
-  function closeDeleteModal() {
-    deleteModal.classList.remove("is-open");
-    currentDeleteMemberId = null;
-    currentDeleteRow = null;
-  }
-
-  if (cancelDeleteBtn) cancelDeleteBtn.addEventListener("click", closeDeleteModal);
-  if (deleteModal) {
-    deleteModal.addEventListener("click", e => {
-      if (e.target === deleteModal) closeDeleteModal();
+    cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+    modal.addEventListener("click", e => {
+      if (e.target === modal) closeDeleteModal();
     });
-  }
 
-  if (confirmDeleteBtn) {
     confirmDeleteBtn.addEventListener("click", async () => {
       if (!currentDeleteMemberId || !window.convexClient) return;
       
-      const archiveOnly = archiveOnlyCheck ? archiveOnlyCheck.checked : false;
+      const archiveOnly = archiveOnlyCheck.checked;
       confirmDeleteBtn.disabled = true;
       cancelDeleteBtn.disabled = true;
       confirmDeleteSpinner.hidden = false;
@@ -1146,7 +1159,6 @@
           await CraftRegistrations.syncWithConvex();
         }
         
-        // Success
         closeDeleteModal();
         if (currentDeleteRow) {
           currentDeleteRow.classList.add("deleting");
@@ -1155,9 +1167,7 @@
           renderAll();
         }
         
-        // Small toast (fallback to alert if no toast system)
-        alert(archiveOnly ? "? Member archived successfully." : "? Member deleted successfully.");
-        
+        alert(archiveOnly ? "✅ Member archived successfully." : "✅ Member deleted successfully.");
       } catch (err) {
         console.error(err);
         alert("Unable to delete member. Please try again.");
@@ -1165,10 +1175,32 @@
         confirmDeleteBtn.disabled = false;
         cancelDeleteBtn.disabled = false;
         confirmDeleteSpinner.hidden = true;
-        if (deleteModal.classList.contains("is-open")) {
+        if (modal.classList.contains("is-open")) {
           confirmDeleteText.textContent = archiveOnly ? "Archive Member" : "Delete Permanently";
         }
       }
     });
+    return modal;
+  }
+
+  function openDeleteModal(memberId, rowEl) {
+    currentDeleteMemberId = memberId;
+    currentDeleteRow = rowEl;
+    const modal = getDeleteModal();
+    modal.classList.add("is-open");
+    const archiveOnlyCheck = document.getElementById("archiveOnlyCheck");
+    const confirmDeleteText = document.getElementById("confirmDeleteText");
+    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+    
+    if (archiveOnlyCheck) archiveOnlyCheck.checked = false;
+    if (confirmDeleteText) confirmDeleteText.textContent = "Delete Permanently";
+    if (confirmDeleteBtn) confirmDeleteBtn.style.backgroundColor = "#ef4444";
+  }
+
+  function closeDeleteModal() {
+    const modal = document.getElementById("deleteMemberModal");
+    if (modal) modal.classList.remove("is-open");
+    currentDeleteMemberId = null;
+    currentDeleteRow = null;
   }
   // --------------------------
