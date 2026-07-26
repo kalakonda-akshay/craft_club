@@ -1153,17 +1153,11 @@
         }
         
         closeDeleteModal();
-        if (currentDeleteRow) {
-          currentDeleteRow.classList.add("deleting");
-          setTimeout(() => renderAll(), 300); // animate out
-        } else {
-          renderAll();
-        }
-        
-        alert(archiveOnly ? "✅ Member archived successfully." : "✅ Member deleted successfully.");
+        alert(archiveOnly ? "✅ Member archived successfully. The page will now refresh." : "✅ Member successfully deleted. The page will now refresh.");
+        window.location.reload();
       } catch (err) {
-        console.error(err);
-        alert("Unable to delete member. Please try again.");
+        console.error("Delete Error:", err);
+        alert("Failed to delete. Please refresh the page and try again.");
       } finally {
         confirmDeleteBtn.disabled = false;
         cancelDeleteBtn.disabled = false;
