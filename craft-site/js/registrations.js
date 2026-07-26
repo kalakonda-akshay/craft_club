@@ -18,16 +18,29 @@ const CraftRegistrations = (function () {
         const joinRequests = await window.convexClient.query("joinRequests:list");
         const membersList = await window.convexClient.query("members:list");
         const attendanceList = await window.convexClient.query("attendance:listAll");
+        const eventsList = await window.convexClient.query("events:list");
+        
+        // Sort events chronologically to determine session indices
+        eventsList.sort((a, b) => a._creationTime - b._creationTime);
+        
+        if (typeof CRAFT_CLUB_STATS !== "undefined") {
+           CRAFT_CLUB_STATS.totalSessionsConducted = eventsList.length;
+        }
         
         // Map Convex schema to frontend expected fields
         memoryCache = joinRequests.map(r => {
           const member = membersList.find(m => m.rollNumber === r.rollNumber);
           
-          let memberAttendance = [];
+          let memberAttendance = Array(eventsList.length).fill("-");
           if (member) {
             // Find attendance for this member ID
             const att = attendanceList.filter(a => a.memberId === member._id);
-            memberAttendance = att.map(a => a.status === "absent" ? "A" : "P"); 
+            att.forEach(a => {
+               const eventIndex = eventsList.findIndex(e => e._id === a.eventId);
+               if (eventIndex !== -1) {
+                  memberAttendance[eventIndex] = a.status === "absent" ? "A" : "P";
+               }
+            });
           }
 
           return {

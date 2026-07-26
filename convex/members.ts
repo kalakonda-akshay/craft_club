@@ -664,6 +664,23 @@ export const deleteMember = mutation({
     // 5. Delete the Join Request
     await ctx.db.delete(joinRequest._id);
     
+    // Send Email Notification
+    const html = `
+      <div style="padding: 30px;">
+        <h2 style="margin-top: 0; font-size: 20px; font-weight: 700; color: #dc2626;">MEMBERSHIP <br/><span style="color: #b91c1c;">TERMINATED</span></h2>
+        <p>Hello <strong>${joinRequest.name}</strong>,</p>
+        <p>Your membership in CRAFT has been removed by the club administrators.</p>
+        <div style="border: 1px solid #fecaca; border-radius: 6px; padding: 20px; margin: 20px 0; background-color: #fef2f2;">
+          <p style="margin: 0; color: #991b1b;">If you believe this was a mistake, please contact the club president.</p>
+        </div>
+      </div>
+    `;
+    await ctx.scheduler.runAfter(0, (await import("./_generated/server")).internal.emailService.sendInternal, {
+      to: joinRequest.collegeEmail,
+      subject: "CRAFT Membership Update",
+      html: html
+    });
+    
     return { success: true, action: "deleted" };
   },
 });
