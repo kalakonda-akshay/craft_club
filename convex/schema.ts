@@ -126,6 +126,7 @@ export default defineSchema({
     reasonToJoin: v.string(),
     skills: v.optional(v.array(v.string())),
     experience: v.optional(v.string()),
+    dateOfBirth: v.optional(v.string()),
     profilePhotoStorageId: v.optional(v.id("_storage")),
     collegeIdFrontStorageId: v.optional(v.id("_storage")),
     collegeIdBackStorageId: v.optional(v.id("_storage")),

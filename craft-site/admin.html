@@ -200,13 +200,36 @@
   </main>
 </div>
 
-<script src="js/convex-bundle.js?v=9"></script>
-<script src="js/registrations.js?v=9"></script>
-<script src="js/data.js?v=9"></script>
-<script src="js/content-store.js?v=9"></script>
-<script src="js/admin.js?v=9"></script>
-<script src="https://unpkg.com/convex@1.17.0/browser.bundle.js?v=9"></script>
+  <!-- Delete Member Modal -->
+  <div id="deleteMemberModal" class="idcard-modal-overlay" hidden style="z-index: 1000; display: flex; align-items: center; justify-content: center;">
+    <div class="idcard-modal-box" style="width: 100%; max-width: 400px; padding: 24px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0,0,0,0.15);">
+      <h3 style="margin-top: 0; color: var(--text-heading);">Delete Member?</h3>
+      <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+        Are you sure you want to remove this member? This action cannot be undone unless you choose to just archive them.
+      </p>
+      
+      <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px; font-size: 14px; cursor: pointer;">
+        <input type="checkbox" id="archiveOnlyCheck" style="cursor: pointer;">
+        <span>Keep data and mark as archived instead of deleting</span>
+      </label>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px;">
+        <button class="btn btn-ghost" id="cancelDeleteBtn">Cancel</button>
+        <button class="btn" id="confirmDeleteBtn" style="background-color: #ef4444; color: white;">
+          <span id="confirmDeleteSpinner" hidden style="margin-right: 6px;">⏳</span>
+          <span id="confirmDeleteText">Delete Permanently</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
 <iframe id="certGeneratorFrame" src="certificate.html" style="width:1056px; height:816px; position:absolute; left:-9999px; opacity:0; pointer-events:none;"></iframe>
+
+<script src="js/convex-bundle.js?v=10"></script>
+<script src="js/registrations.js?v=10"></script>
+<script src="js/data.js?v=10"></script>
+<script src="js/content-store.js?v=10"></script>
+<script src="js/admin.js?v=10"></script>
+<script src="https://unpkg.com/convex@1.17.0/browser.bundle.js?v=10"></script>
 </body>
 </html>
-

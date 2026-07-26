@@ -114,6 +114,7 @@ export const submit = mutation({
     reasonToJoin: v.string(),
     skills: v.optional(v.array(v.string())),
     experience: v.optional(v.string()),
+    dateOfBirth: v.optional(v.string()),
     profilePhotoStorageId: v.optional(v.id("_storage")),
     collegeIdFrontStorageId: v.optional(v.id("_storage")),
     collegeIdBackStorageId: v.optional(v.id("_storage")),
@@ -227,6 +228,7 @@ export const approve = mutation({
       personalEmail: request.personalEmail,
       phone: request.phone,
       gender: "Other", // Defaulted since it's not in JoinRequest schema
+      dateOfBirth: request.dateOfBirth,
       skills: request.skills,
       profilePhotoStorageId: request.profilePhotoStorageId,
       collegeIdFrontStorageId: request.collegeIdFrontStorageId,
@@ -250,10 +252,13 @@ export const approve = mutation({
 
     // 5. Send Approval Email with QR Code
     const qrCodeUrl = `https://quickchart.io/qr?size=250&text=${encodeURIComponent(memberId)}`;
+    const yearLabel = request.year + (request.year === "1" ? "st" : request.year === "2" ? "nd" : request.year === "3" ? "rd" : "th") + " Year";
     await sendJoinRequestApproved(ctx, request.personalEmail || request.collegeEmail, {
       name: request.name,
       memberId: memberId,
       qrCodeUrl: qrCodeUrl,
+      dept: request.department,
+      year: yearLabel,
     });
 
     return newMemberId;
@@ -346,7 +351,7 @@ export const triggerMockEmail = mutation({
   args: { email: v.string(), name: v.string(), type: v.string() },
   handler: async (ctx, args) => {
     if (args.type === "accepted") {
-      await sendJoinRequestApproved(ctx, args.email, { name: args.name, memberId: generateMemberId(), qrCodeUrl: "https://quickchart.io/qr?size=250&text=CRAFT-MOCK-ID" });
+      await sendJoinRequestApproved(ctx, args.email, { name: args.name, memberId: generateMemberId(), dept: "CSE", year: "1st Year", qrCodeUrl: "https://quickchart.io/qr?size=250&text=CRAFT-MOCK-ID" });
     } else if (args.type === "rejected") {
       await sendJoinRequestRejected(ctx, args.email, { name: args.name, reason: "Did not meet club requirements" });
     }

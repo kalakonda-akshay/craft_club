@@ -308,7 +308,7 @@
             <div class="admin-actions">
               ${actionButtons(r)}
               <button class="admin-action-btn admin-action-btn--idcard" data-idcard="${r.id}">💳 ID Card</button>
-              <button class="btn-delete-row" data-delete="${r.memberId || r.id}" title="Delete Member">
+              <button class="btn-delete-row" data-delete="${r.id}" title="Delete Member">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
                 Delete
               </button>
@@ -359,14 +359,28 @@
         const next = current === null ? "P" : current === "P" ? "A" : null;
         CraftRegistrations.setAttendance(btn.dataset.id, idx, next);
         renderTable();
-        renderStats();
-      loadDeletionRequests();
+      body.querySelectorAll("[data-att-index]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = parseInt(btn.dataset.attIndex, 10);
+          const entry = CraftRegistrations.findById(btn.dataset.id);
+          const current = (entry.attendance || [])[idx] || null;
+          const next = current === null ? "P" : current === "P" ? "A" : null;
+          CraftRegistrations.setAttendance(btn.dataset.id, idx, next);
+          renderTable();
+          renderStats();
+          loadDeletionRequests();
+        });
       });
-    });
 
-    body.querySelectorAll("[data-idcard]").forEach(btn => {
-      btn.addEventListener("click", () => openIdCardModal(btn.dataset.idcard));
-    });
+      body.querySelectorAll("[data-idcard]").forEach(btn => {
+        btn.addEventListener("click", () => openIdCardModal(btn.dataset.idcard));
+      });
+      body.querySelectorAll(".btn-delete-row").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const row = e.target.closest("tr");
+          openDeleteModal(btn.dataset.delete, row);
+        });
+      });
 
     // Bulk actions
     const selectAllCb = document.getElementById("selectAll");
@@ -1093,14 +1107,14 @@
   function openDeleteModal(memberId, rowEl) {
     currentDeleteMemberId = memberId;
     currentDeleteRow = rowEl;
-    deleteModal.hidden = false;
+    deleteModal.classList.add("is-open");
     if (archiveOnlyCheck) archiveOnlyCheck.checked = false;
     confirmDeleteText.textContent = "Delete Permanently";
     confirmDeleteBtn.style.backgroundColor = "#ef4444";
   }
 
   function closeDeleteModal() {
-    deleteModal.hidden = true;
+    deleteModal.classList.remove("is-open");
     currentDeleteMemberId = null;
     currentDeleteRow = null;
   }
@@ -1124,9 +1138,13 @@
       
       try {
         await window.convexClient.mutation("members:deleteMember", {
-          memberId: currentDeleteMemberId,
+          joinRequestId: currentDeleteMemberId,
           archiveOnly: archiveOnly
         });
+        
+        if (typeof CraftRegistrations !== "undefined") {
+          await CraftRegistrations.syncWithConvex();
+        }
         
         // Success
         closeDeleteModal();
@@ -1147,7 +1165,7 @@
         confirmDeleteBtn.disabled = false;
         cancelDeleteBtn.disabled = false;
         confirmDeleteSpinner.hidden = true;
-        if (!deleteModal.hidden) {
+        if (deleteModal.classList.contains("is-open")) {
           confirmDeleteText.textContent = archiveOnly ? "Archive Member" : "Delete Permanently";
         }
       }

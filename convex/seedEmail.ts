@@ -28,7 +28,7 @@ export const seedTemplates = mutation({
         {
           title: "Join Request Approved",
           subject: "You're In! Welcome to CRAFT",
-          htmlContent: templateApproved({ name: "{{name}}", memberId: "{{memberId}}", role: "Core Member", dept: "CSE A", year: "1st Year B.Tech", qrCodeUrl: "{{qrCodeUrl}}" })
+          htmlContent: templateApproved({ name: "{{name}}", memberId: "{{memberId}}", role: "Member", dept: "{{dept}}", year: "{{year}}", qrCodeUrl: "{{qrCodeUrl}}" })
         },
         {
           title: "Application Update",

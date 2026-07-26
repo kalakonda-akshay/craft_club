@@ -35,18 +35,23 @@ export async function getCurrentAdmin(ctx: Ctx): Promise<Doc<"admins"> | null> {
  * Throws if not authenticated or not found.
  */
 export async function requireAdmin(ctx: Ctx): Promise<Doc<"admins">> {
-  const admin = await getCurrentAdmin(ctx);
+  let admin = await getCurrentAdmin(ctx);
   if (!admin) {
     // TEMPORARY BYPASS FOR DEMO / LOCAL GATEKEEPER
-    return {
-      _id: "public_submission" as any,
-      _creationTime: Date.now(),
-      name: "demo_admin", email: "demo@demo.com", phone: "123",
-      passwordHash: "demo",
-      role: "super_admin",
-      isActive: true, createdAt: Date.now(), updatedAt: Date.now(),
-      
-    };
+    admin = await ctx.db.query("admins").first();
+    if (!admin) {
+      if (ctx.db.insert) {
+        const adminId = await (ctx as MutationCtx).db.insert("admins", {
+          name: "demo_admin", email: "demo@demo.com", phone: "123",
+          passwordHash: "demo", role: "super_admin",
+          isActive: true, createdAt: Date.now(), updatedAt: Date.now()
+        });
+        admin = await ctx.db.get(adminId);
+      } else {
+        throw new Error("No admin found and cannot insert one in a query context.");
+      }
+    }
+    return admin!;
   }
   return admin;
 }

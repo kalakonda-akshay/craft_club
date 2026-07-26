@@ -71,10 +71,12 @@ const CraftContent = (function () {
       const processed = await processImages(JSON.parse(JSON.stringify(data)));
       writeRaw(key, processed); // update local with clean URLs
       await window.convexClient.mutation("content:saveContent", { key, data: JSON.stringify(processed) });
-      
-      statusEls.forEach(el => {
-         if (el.textContent.includes("Uploading")) el.textContent = "Saved to cloud ?" refresh homepage to see it live.";
-      });
+            statusEls.forEach(el => {
+           if (el.textContent.includes("Uploading")) el.textContent = "Saved to cloud - refresh homepage to see it live.";
+           else el.textContent = "Saved to cloud!";
+           el.classList.add("success");
+           setTimeout(() => el.textContent = "", 3000);
+        });
     } catch (e) {
       console.error("Failed to sync to cloud:", e);
     }

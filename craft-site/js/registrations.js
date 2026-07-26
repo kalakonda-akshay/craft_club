@@ -16,21 +16,37 @@ const CraftRegistrations = (function () {
     if (window.convexClient) {
       try {
         const joinRequests = await window.convexClient.query("joinRequests:list");
+        const membersList = await window.convexClient.query("members:list");
+        const attendanceList = await window.convexClient.query("attendance:listAll");
+        
         // Map Convex schema to frontend expected fields
-        memoryCache = joinRequests.map(r => ({
-          id: r._id,
-          memberId: "CRAFT-2026-" + r._id.slice(-4),
-          name: r.name,
-          roll: r.rollNumber,
-          email: r.collegeEmail,
-          dept: r.department,
-          year: r.year,
-          interest: r.reasonToJoin,
-          status: r.status === "Approved" ? "accepted" : r.status === "Waitlisted" ? "waitlist" : r.status.toLowerCase(),
-          submittedAt: new Date(r.submittedAt).toISOString(),
-          attendance: [],
-          sessionsAttended: 0
-        }));
+        memoryCache = joinRequests.map(r => {
+          const member = membersList.find(m => m.rollNumber === r.rollNumber);
+          
+          let memberAttendance = [];
+          if (member) {
+            // Find attendance for this member ID
+            const att = attendanceList.filter(a => a.memberId === member._id);
+            memberAttendance = att.map(a => a.status === "absent" ? "A" : "P"); 
+          }
+
+          return {
+            id: r._id,
+            memberId: member ? member.memberId : "CRAFT-2026-" + r._id.slice(-4),
+            memberDbId: member ? member._id : null,
+            name: r.name,
+            roll: r.rollNumber,
+            email: r.collegeEmail,
+            dept: r.department,
+            year: r.year === "1" ? "1st Year" : r.year === "2" ? "2nd Year" : r.year === "3" ? "3rd Year" : "4th Year",
+            interest: r.reasonToJoin,
+            status: r.status === "Approved" ? "accepted" : r.status === "Waitlisted" ? "waitlist" : r.status.toLowerCase(),
+            submittedAt: new Date(r.submittedAt).toISOString(),
+            photo: member && member.photoUrl ? member.photoUrl : "",
+            attendance: memberAttendance,
+            sessionsAttended: memberAttendance.filter(a => a === "P").length
+          };
+        });
         writeAll(memoryCache);
       } catch (e) {
         console.error("Failed to sync with Convex", e);

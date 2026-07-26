@@ -1172,6 +1172,7 @@
   }
 
   // craft-site/js/convex-wrapper.js
+  window.ConvexHttpClient = ConvexHttpClient;
   window.convexClient = new ConvexHttpClient("https://brainy-octopus-570.convex.cloud");
   console.log("Convex HTTP Client loaded successfully!");
 })();

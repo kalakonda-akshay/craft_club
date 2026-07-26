@@ -144,6 +144,7 @@
               collegeEmail: joinForm.femail.value.trim(),
               personalEmail: joinForm.femail.value.trim(),
               phone: joinForm.fphone ? joinForm.fphone.value.trim() : "0000000000",
+              dateOfBirth: joinForm.fdob ? joinForm.fdob.value : undefined,
               reasonToJoin: (joinForm.fprofile && joinForm.fprofile.value.trim()) ? joinForm.fprofile.value.trim() : "I want to join CRAFT."
            });
         }
